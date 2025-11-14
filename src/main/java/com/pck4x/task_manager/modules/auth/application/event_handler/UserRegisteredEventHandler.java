@@ -5,6 +5,7 @@ import com.pck4x.task_manager.modules.auth.domain.repository.IAuthRepository;
 import com.pck4x.task_manager.modules.user.application.events.UserRegisteredEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.modulith.events.ApplicationModuleListener;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -13,12 +14,13 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserRegisteredEventHandler {
     private final IAuthRepository authRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @ApplicationModuleListener
     public void on (UserRegisteredEvent event){
         var auth = TAuth.Create(
                 event.username(),
-                event.password(),
+                passwordEncoder.encode(event.password()),
                 event.id()
         );
         authRepository.Create(auth);

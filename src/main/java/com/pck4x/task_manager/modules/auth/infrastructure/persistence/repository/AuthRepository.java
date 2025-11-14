@@ -28,4 +28,14 @@ public class AuthRepository implements IAuthRepository {
     public void Delete(UUID id) {
 
     }
+
+    @Override
+    public TAuth GetById(UUID id) {
+        return null;
+    }
+
+    @Override
+    public TAuth GetByUsername(String username) {
+        return null;
+    }
 }

@@ -56,6 +56,15 @@ public record Result(
         );
     }
 
+    public static Result error(String msg) {
+        return new Result(
+                null,
+                false,
+                HttpStatus.BAD_REQUEST,
+                new MessageDto("error", msg == null ? "" : msg)
+        );
+    }
+
     public static Result notFound(String msg) {
         return new Result(
                 null,
