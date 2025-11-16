@@ -9,12 +9,17 @@ import java.util.List;
 @Getter
 @Setter
 public class MessageDto {
-    public String type;
-    public String messages;
+    private String type;
+    private String messages;
 
     public MessageDto(String type, String message)
     {
         this.type = type;
+        this.messages = message;
+    }
+
+    public MessageDto(String message)
+    {
         this.messages = message;
     }
 
