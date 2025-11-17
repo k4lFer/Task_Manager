@@ -1,10 +1,9 @@
-package com.pck4x.task_manager.modules.user.application.use_cases.command.output;
+package com.pck4x.task_manager.modules.user.application.use_cases.command.presenter;
 
 import com.pck4x.task_manager.modules.user.application.use_cases.command.output_port.IRegisterAdminUserOutputPort;
 import com.pck4x.task_manager.shared.application.output_port.IHandleFailure;
 import com.pck4x.task_manager.shared.application.output_port.IHandleSuccess;
 import com.pck4x.task_manager.shared.objects.MessageDto;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Component
-public class RegisterAdminUserOutput implements IRegisterAdminUserOutputPort {
+public class RegisterAdminUserPresenter implements IRegisterAdminUserOutputPort {
     private boolean isSuccess;
     private UUID data;
     private List<MessageDto> messages;

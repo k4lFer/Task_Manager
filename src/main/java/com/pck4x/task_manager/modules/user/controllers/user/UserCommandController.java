@@ -1,10 +1,8 @@
 package com.pck4x.task_manager.modules.user.controllers.user;
 
 import com.pck4x.task_manager.modules.user.application.dtos.input.RegisterUserInput;
-import com.pck4x.task_manager.modules.user.application.use_cases.command.RegisterUserCommand;
 import com.pck4x.task_manager.modules.user.application.use_cases.command.input_port.IRegisterAdminUserInputPort;
 import com.pck4x.task_manager.modules.user.application.use_cases.command.output_port.IRegisterAdminUserOutputPort;
-import com.pck4x.task_manager.modules.user.application.use_cases.handlers.RegisterUserCommandHandler;
 import com.pck4x.task_manager.shared.helper.ResponseHelper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,18 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "User Management")
 @RequiredArgsConstructor
 public class UserCommandController {
-    private final RegisterUserCommandHandler handler;
     private final IRegisterAdminUserInputPort inputPort;
     private final IRegisterAdminUserOutputPort outputPort;
 
     @PostMapping("/register")
     @Operation(summary = "Create a new user", description = "Add a new user to the system")
     public ResponseEntity<?> RegisterUser(@RequestBody RegisterUserInput input) {
-        /*var command = new RegisterUserCommand(input);
-
-        var result = handler.Execute(command);
-
-        return ResponseHelper.toResponse(result);*/
         inputPort.Handle(input);
         return ResponseHelper.toResponse(outputPort);
     }
