@@ -1,9 +1,9 @@
-package com.pck4x.task_manager.modules.user.application.use_cases.handlers;
+package com.pck4x.task_manager.modules.user.application.use_cases.interactor.command;
 
-import com.pck4x.task_manager.modules.user.application.dtos.input.RegisterUserInput;
+import com.pck4x.task_manager.modules.user.application.dtos.input.RegisterPublicUserDto;
 import com.pck4x.task_manager.modules.user.application.events.UserRegisteredEvent;
-import com.pck4x.task_manager.modules.user.application.use_cases.command.input_port.IRegisterAdminUserInputPort;
-import com.pck4x.task_manager.modules.user.application.use_cases.command.output_port.IRegisterAdminUserOutputPort;
+import com.pck4x.task_manager.modules.user.application.use_cases.input_port.command.IRegisterPublicUserInputPort;
+import com.pck4x.task_manager.modules.user.application.use_cases.output_port.command.IRegisterPublicUserOutputPort;
 import com.pck4x.task_manager.modules.user.domain.models.TUser;
 import com.pck4x.task_manager.modules.user.domain.repository.IUserRepository;
 import com.pck4x.task_manager.shared.application.output_port.IHandleFailure;
@@ -15,24 +15,23 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class RegisterAdminUserCommandHandler implements IRegisterAdminUserInputPort {
-    private final IUserRepository repository;
+public class RegisterPublicUserInteractor implements IRegisterPublicUserInputPort {
+    private final IUserRepository userRepository;
     private final ApplicationEventPublisher eventPublisher;
-    private final IRegisterAdminUserOutputPort output;
+    private final IRegisterPublicUserOutputPort output;
 
     @Override
-    public void Handle(RegisterUserInput input) {
-
+    public void Handle(RegisterPublicUserDto input) {
         var user = TUser.Create(
                 input.getFirstName(),
                 input.getLastName(),
                 input.getBirthDate()
         );
 
-        var saved = repository.Create(user);
+        var saved = userRepository.Create(user);
 
         if (saved == null) {
-            output.HandleFailure(IHandleFailure.Fail("User not registered", HttpStatus.NOT_FOUND));
+            output.HandleFailure(IHandleFailure.Fail("User not registered", HttpStatus.BAD_REQUEST));
             return;
         }
 
@@ -47,5 +46,4 @@ public class RegisterAdminUserCommandHandler implements IRegisterAdminUserInputP
         output.HandleSuccess(IHandleSuccess.HandleSuccess(user.getId(), HttpStatus.CREATED, "User created"));
 
     }
-
 }

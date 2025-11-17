@@ -1,4 +1,4 @@
-package com.pck4x.task_manager.modules.user.controllers.user;
+package com.pck4x.task_manager.modules.user.controllers.admin;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;

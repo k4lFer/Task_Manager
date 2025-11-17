@@ -5,7 +5,7 @@ import lombok.Getter;
 import java.util.Date;
 
 @Getter
-public class RegisterUserInput {
+public class RegisterUserDto {
     public String firstName;
     public String lastName;
     public Date birthDate;
