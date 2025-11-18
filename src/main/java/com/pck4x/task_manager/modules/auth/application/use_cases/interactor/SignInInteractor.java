@@ -36,6 +36,15 @@ public class SignInInteractor implements ISignInInputPort {
             return;
         }
 
+        /*
+        *
+        * payload, contiene id de momento...
+        *
+        * Generar tokens
+        * var accessToken = jwt.GenerateAccessToken(payload);
+        * var refreshToken = jwt.GenerateRefreshToken(payload);
+        * */
+
         var dto = new SignInOutputDto(
                 user.getId(),
                 UUID.randomUUID().toString(),
