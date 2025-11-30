@@ -1,28 +1,28 @@
 package com.pck4x.task_manager.shared.helper;
 
-import com.pck4x.task_manager.shared.interfaces.IHttpResponse;
-import com.pck4x.task_manager.shared.interfaces.IOutput;
+import com.pck4x.task_manager.shared.result.Result;
 import org.springframework.http.ResponseEntity;
 
 import java.net.URI;
 
 public class ResponseHelper {
-    public static ResponseEntity<?> toResponse(IHttpResponse output){
-        int code = output.getHttpStatusCode().value();
+
+    public static <T> ResponseEntity<Result<T>> toResponse(Result<T> result) {
+        int code = switch (result.getStatus()) {
+            case "OK" -> 200;
+            case "CREATED" -> 201;
+            case "NO_CONTENT" -> 204;
+            case "BAD_REQUEST" -> 400;
+            case "NOT_FOUND" -> 404;
+            case "CONFLICT" -> 409;
+            case "INTERNAL_SERVER_ERROR" -> 500;
+            default -> 200;
+        };
 
         return switch (code) {
-            case 200 -> ResponseEntity.ok(output);
-            case 201 -> ResponseEntity.created(URI.create("")).body(output);
-
+            case 201 -> ResponseEntity.created(URI.create("")).body(result);
             case 204 -> ResponseEntity.noContent().build();
-
-            case 404 -> ResponseEntity.status(404).body(output);
-
-            case 400 -> ResponseEntity.badRequest().body(output);
-
-            case 409 -> ResponseEntity.status(409).body(output);
-
-            default -> ResponseEntity.status(code).body(output);
+            default -> ResponseEntity.status(code).body(result);
         };
     }
 }

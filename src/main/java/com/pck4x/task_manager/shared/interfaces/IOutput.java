@@ -1,6 +1,6 @@
 package com.pck4x.task_manager.shared.interfaces;
 
-public interface IOutput extends IHttpResponse, IMessageDto{
-    Object data();
+public interface IOutput<T> extends IHttpResponse, IMessageDto{
+    T data();
     boolean isSuccess();
 }

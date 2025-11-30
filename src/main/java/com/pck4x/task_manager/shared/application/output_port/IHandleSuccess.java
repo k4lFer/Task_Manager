@@ -9,7 +9,7 @@ public interface IHandleSuccess<T> {
     T data();
     List<MessageDto> messages();
     HttpStatus status();
-
+/*
     static <T> IHandleSuccess<T> HandleSuccess(T data, HttpStatus status, String message) {
         return new IHandleSuccess<>() {
             @Override public T data() {
@@ -23,6 +23,6 @@ public interface IHandleSuccess<T> {
             }
         };
     }
-
+*/
 }
 
