@@ -3,7 +3,8 @@ package com.pck4x.task_manager.modules.auth.infrastructure.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity
@@ -24,15 +25,13 @@ public class PersonEntity {
     private String lastName;
 
     @Column(name = "birth_date")
-    private Date birthDate;
+    private LocalDate birthDate;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at")
-    private String createdAt;
+    @Column(name = "created_at", columnDefinition = "timestamptz")
+    private Instant createdAt;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updated_at")
-    private String updatedAt;
+    @Column(name = "updated_at", columnDefinition = "timestamptz")
+    private Instant updatedAt;
 
     @OneToOne(mappedBy = "person", cascade = CascadeType.ALL)
     private UserEntity user;

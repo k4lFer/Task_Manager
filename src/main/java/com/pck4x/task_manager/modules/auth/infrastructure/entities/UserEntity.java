@@ -1,11 +1,11 @@
 package com.pck4x.task_manager.modules.auth.infrastructure.entities;
 
 import com.pck4x.task_manager.modules.workspace.infrastructure.entities.WorkspaceEntity;
-import com.pck4x.task_manager.modules.workspace.infrastructure.entities.WorkspaceMembersEntity;
+import com.pck4x.task_manager.modules.workspace.infrastructure.entities.WorkspaceMemberEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,21 +29,19 @@ public class UserEntity {
     @Column(name = "password")
     private String password;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    @Column(name = "created_at", columnDefinition = "timestamptz")
+    private Instant createdAt;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    @Column(name = "updated_at", columnDefinition = "timestamptz")
+    private Instant updatedAt;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "person_id", referencedColumnName = "id", nullable = false, unique = true)
     private PersonEntity person;
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
-    private List<WorkspaceEntity> workspaces;
+    private List<WorkspaceEntity> workspace;
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
-    private List<WorkspaceMembersEntity> workspaceMembers;
+    private List<WorkspaceMemberEntity> workspaceMember;
 }

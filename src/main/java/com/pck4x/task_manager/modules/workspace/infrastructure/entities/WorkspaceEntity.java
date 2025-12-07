@@ -7,7 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,8 +22,8 @@ public class WorkspaceEntity {
     @Id
     private UUID id;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id", referencedColumnName = "id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", nullable = false)
     private UserEntity owner;
 
     @Column(name = "name")
@@ -34,14 +35,12 @@ public class WorkspaceEntity {
     @Column(name = "is_private")
     private Boolean isPrivate;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    @Column(name = "created_at", columnDefinition = "timestamptz")
+    private Instant createdAt;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    @Column(name = "updated_at", columnDefinition = "timestamptz")
+    private Instant updatedAt;
 
-    @OneToMany(mappedBy = "workspace", fetch = FetchType.LAZY)
-    private List<WorkspaceMembersEntity> workspaceMembers;
+    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<WorkspaceMemberEntity> workspaceMember = new ArrayList<>();
 }
