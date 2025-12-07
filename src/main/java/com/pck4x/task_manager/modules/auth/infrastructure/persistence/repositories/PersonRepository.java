@@ -16,13 +16,13 @@ import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
-@Transactional
 public class PersonRepository implements IPersonRepository {
     private final PersonMapper personMapper;
     private final JpaPersonRepository jpa;
     private final UserMapper userMapper;
 
     @Override
+    @Transactional
     public TPerson save(TPerson person) {
         PersonEntity entity = personMapper.toEntity(person);
         UserEntity user = userMapper.toEntity(person.getUser());

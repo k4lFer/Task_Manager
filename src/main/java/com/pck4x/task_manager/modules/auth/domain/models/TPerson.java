@@ -3,8 +3,8 @@ package com.pck4x.task_manager.modules.auth.domain.models;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDate;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Getter

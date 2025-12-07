@@ -1,11 +1,9 @@
 package com.pck4x.task_manager.modules.workspace.infrastructure.entities;
 
 import com.pck4x.task_manager.modules.auth.infrastructure.entities.UserEntity;
+import com.pck4x.task_manager.modules.chat.infrastructure.entities.ChatChannelEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -14,6 +12,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "workspaces", schema = "workspace")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 @Getter
@@ -43,4 +42,7 @@ public class WorkspaceEntity {
 
     @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WorkspaceMemberEntity> workspaceMember = new ArrayList<>();
+
+    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChatChannelEntity> chatChannel = new ArrayList<>();
 }

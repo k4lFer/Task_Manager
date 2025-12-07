@@ -4,13 +4,11 @@ import com.pck4x.task_manager.modules.workspace.domain.models.TWorkspaceMembers;
 import com.pck4x.task_manager.modules.workspace.interfaces.repositories.IWorkspaceMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
-@Transactional
 public class WorkspaceMemberRepository implements IWorkspaceMemberRepository {
     @Override
     public TWorkspaceMembers save(TWorkspaceMembers workspaceMembers) {

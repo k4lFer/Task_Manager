@@ -17,10 +17,11 @@ public abstract class WorkspaceMemberMapper {
     protected EntityManager entityManager;
 
     @Mapping(target = "workspaceId", source = "workspace.id")
-    @Mapping(target = "memberId", source = "member.id")
+    @Mapping(target = "workspace", ignore = true) // <--- ESTO ROMPE EL BUCLE
     public abstract TWorkspaceMembers toDomain(WorkspaceMemberEntity entity);
 
-    @Mapping(target = "workspace", ignore = true) // El padre lo setea el WorkspaceMapper
+    // Mapeo inverso (Entity)
+    @Mapping(target = "workspace", ignore = true) // El padre lo setea el WorkspaceMapper con @AfterMapping
     @Mapping(target = "member", source = "memberId", qualifiedByName = "mapMemberRef")
     public abstract WorkspaceMemberEntity toEntity(TWorkspaceMembers domain);
 

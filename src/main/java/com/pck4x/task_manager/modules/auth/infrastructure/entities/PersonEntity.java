@@ -3,8 +3,8 @@ package com.pck4x.task_manager.modules.auth.infrastructure.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity

@@ -3,16 +3,14 @@ package com.pck4x.task_manager.modules.workspace.infrastructure.entities;
 import com.pck4x.task_manager.modules.auth.infrastructure.entities.UserEntity;
 import com.pck4x.task_manager.modules.workspace.objects.enums.WorkspaceMemberRole;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.Instant;
 import java.util.UUID;
 
 @Entity
 @Table(name = "workspace_members", schema = "workspace")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 @Getter

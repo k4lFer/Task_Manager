@@ -1,5 +1,6 @@
 package com.pck4x.task_manager.modules.auth.infrastructure.entities;
 
+import com.pck4x.task_manager.modules.chat.infrastructure.entities.ChatMessageEntity;
 import com.pck4x.task_manager.modules.workspace.infrastructure.entities.WorkspaceEntity;
 import com.pck4x.task_manager.modules.workspace.infrastructure.entities.WorkspaceMemberEntity;
 import jakarta.persistence.*;
@@ -44,4 +45,8 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<WorkspaceMemberEntity> workspaceMember;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<ChatMessageEntity> chatMessage;
+
 }
