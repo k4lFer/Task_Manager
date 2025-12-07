@@ -18,6 +18,7 @@ import java.util.UUID;
 @Getter
 @Setter
 public class WorkspaceMemberEntity {
+    
     @Id
     private UUID id;
 
