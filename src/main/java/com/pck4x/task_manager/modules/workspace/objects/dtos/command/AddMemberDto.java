@@ -7,6 +7,7 @@ import java.util.UUID;
 
 @Getter
 public class AddMemberDto {
+    public UUID workspaceId;
     public UUID memberId;
     public WorkspaceMemberRole role;
 }

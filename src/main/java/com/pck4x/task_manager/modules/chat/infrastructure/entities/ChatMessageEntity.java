@@ -2,8 +2,10 @@ package com.pck4x.task_manager.modules.chat.infrastructure.entities;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.pck4x.task_manager.modules.auth.infrastructure.entities.UserEntity;
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -30,6 +32,7 @@ public class ChatMessageEntity {
     @Column(name = "message", columnDefinition = "text")
     private String message;
 
+    @Type(JsonBinaryType.class)
     @Column(name = "content", columnDefinition = "jsonb")
     private JsonNode content;
 

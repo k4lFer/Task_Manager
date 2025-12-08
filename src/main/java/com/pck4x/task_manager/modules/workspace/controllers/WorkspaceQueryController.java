@@ -17,17 +17,16 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/workspace")
 @Tag(name = "Workspace")
+@SecurityRequirement(name = "bearerAuth")
 @AllArgsConstructor
 public class WorkspaceQueryController {
     private final GetAllMyWorkspacesQuery getAllMyWorkspacesQuery;
 
     @GetMapping("/my-workspaces")
-    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<?> GetMyWorkspaces(
             @Parameter(hidden = true) @AuthenticationPrincipal String userId,
             @Valid @ModelAttribute QueryDto options
-
-            ){
+        ){
         var result = getAllMyWorkspacesQuery.execute(UUID.fromString(userId), options);
         return ResponseHelper.toResponse(result);
     }
