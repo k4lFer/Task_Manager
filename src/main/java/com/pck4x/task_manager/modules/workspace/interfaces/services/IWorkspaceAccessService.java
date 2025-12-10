@@ -5,6 +5,9 @@ import java.util.UUID;
 
 public interface IWorkspaceAccessService {
     boolean isOwner(UUID workspaceId, UUID userId);
+    boolean isAdmin(UUID workspaceId, UUID userId);
+    boolean isMember(UUID workspaceId, UUID userId);
+    boolean isGuest(UUID workspaceId, UUID userId);
 
     boolean hasRole(UUID workspaceId, UUID userId, WorkspaceMemberRole role);
 

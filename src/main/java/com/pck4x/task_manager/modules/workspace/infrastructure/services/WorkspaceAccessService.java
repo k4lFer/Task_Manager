@@ -24,6 +24,21 @@ public class WorkspaceAccessService implements IWorkspaceAccessService {
     }
 
     @Override
+    public boolean isAdmin(UUID workspaceId, UUID userId) {
+        return hasRole(workspaceId, userId, WorkspaceMemberRole.ADMIN);
+    }
+
+    @Override
+    public boolean isMember(UUID workspaceId, UUID userId) {
+        return hasRole(workspaceId, userId, WorkspaceMemberRole.MEMBER);
+    }
+
+    @Override
+    public boolean isGuest(UUID workspaceId, UUID userId) {
+        return hasRole(workspaceId, userId, WorkspaceMemberRole.GUEST);
+    }
+
+    @Override
     public boolean hasRole(UUID workspaceId, UUID userId, WorkspaceMemberRole role) {
         return workspaceMemberRepository.findByWorkspaceIdAndMemberId(workspaceId, userId)
                 .map(m -> m.getRole() == role)
@@ -32,9 +47,6 @@ public class WorkspaceAccessService implements IWorkspaceAccessService {
 
     @Override
     public boolean isAdminOrOwner(UUID workspaceId, UUID userId) {
-        if (isOwner(workspaceId, userId)) {
-            return true;
-        }
-        return hasRole(workspaceId, userId, WorkspaceMemberRole.ADMIN);
+        return isOwner(workspaceId, userId) || isAdmin(workspaceId, userId);
     }
 }

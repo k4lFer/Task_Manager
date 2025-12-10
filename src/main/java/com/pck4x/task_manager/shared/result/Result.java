@@ -40,6 +40,11 @@ public class Result<T> {
         return new Result<>(null, true, HttpStatusCode.valueOf(204), Collections.emptyList());
     }
 
+    public static <T> Result<T> forbidden(String msg) {
+        return new Result<>(null, false, HttpStatusCode.valueOf(403),
+                List.of(new MessageDto("forbidden", msg != null ? msg : "Forbidden")));
+    }
+
     public static <T> Result<T> error(String msg) {
         return new Result<>(null, false, HttpStatusCode.valueOf(400),
                 List.of(new MessageDto("error", msg != null ? msg : "Bad request")));
