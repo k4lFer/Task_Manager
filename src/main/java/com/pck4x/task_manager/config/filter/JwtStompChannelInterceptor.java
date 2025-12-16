@@ -14,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -23,10 +24,35 @@ public class JwtStompChannelInterceptor implements ChannelInterceptor {
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
 
+
         StompHeaderAccessor accessor =
                 MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
 
         if (accessor == null) return message;
+
+        /*
+        if (StompCommand.SUBSCRIBE.equals(accessor.getCommand())) {
+
+            String destination = accessor.getDestination();
+            // /topic/channel/{id}
+
+            if (destination != null && destination.startsWith("/topic/channel/")) {
+
+                UUID channelId = UUID.fromString(
+                        destination.substring("/topic/channel/".length())
+                );
+
+                String userId = accessor.getUser().getName();
+
+                boolean allowed = chatChannelRepository
+                        .userBelongsToChannel(UUID.fromString(userId), channelId);
+
+                if (!allowed) {
+                    throw new MessageDeliveryException("FORBIDDEN_CHANNEL");
+                }
+            }
+        }
+        */
 
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
 

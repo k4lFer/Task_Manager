@@ -3,42 +3,46 @@ package com.pck4x.task_manager.modules.chat.infrastructure.acl;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class PresenceService {
-    private final Set<String> connectedUsers = Collections.synchronizedSet(new HashSet<>());
+
+    // sessionId -> userId
+    private final Map<String, String> sessions = new ConcurrentHashMap<>();
+
     private final SimpMessagingTemplate messagingTemplate;
-    private static final String ONLINE_USERS_TOPIC = "/topic/online-users";
 
     public PresenceService(SimpMessagingTemplate messagingTemplate) {
         this.messagingTemplate = messagingTemplate;
     }
 
-    /**
-     * Añade un usuario a la lista de conectados y notifica a todos.
-     */
-    public void userConnected(String userId) {
-        if (connectedUsers.add(userId)) {
-            publishOnlineUsers();
-        }
+    public void userConnected(String sessionId, String userId) {
+        sessions.put(sessionId, userId);
+        publishPresence();
     }
 
-    public void userDisconnected(String userId) {
-        if (connectedUsers.remove(userId)) {
-            publishOnlineUsers();
-        }
+    public void userDisconnected(String sessionId) {
+        sessions.remove(sessionId);
+        publishPresence();
     }
 
-    public Set<String> getConnectedUsers() {
-        return new HashSet<>(connectedUsers); // Retorna una copia segura
+    public boolean isUserOnline(String userId) {
+        return sessions.containsValue(userId);
     }
 
+    public Set<String> getOnlineUsers() {
+        return new HashSet<>(sessions.values());
+    }
 
-    private void publishOnlineUsers() {
-        messagingTemplate.convertAndSend(ONLINE_USERS_TOPIC, connectedUsers);
-        System.out.println("Presence update: " + connectedUsers.size() + " users online.");
+    private void publishPresence() {
+        List<String> onlineUsers = new ArrayList<>(sessions.values());
+
+        System.out.println("PRESENCE PAYLOAD -> " + onlineUsers);
+        messagingTemplate.convertAndSend(
+                "/topic/online-users",
+                onlineUsers
+        );
     }
 }

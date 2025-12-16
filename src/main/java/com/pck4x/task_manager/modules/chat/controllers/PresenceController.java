@@ -11,11 +11,12 @@ import java.util.Set;
 @Controller
 @RequiredArgsConstructor
 public class PresenceController {
-
+/*
     private final PresenceService presenceService;
 
     @SubscribeMapping("/topic/online-users")
     public Set<String> handleSubscription(Principal principal) {
         return presenceService.getConnectedUsers();
     }
+*/
 }

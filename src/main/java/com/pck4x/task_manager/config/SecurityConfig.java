@@ -41,7 +41,6 @@ public class SecurityConfig {
                         })
                 )
 
-
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers(
                                 "/v3/api-docs/**",

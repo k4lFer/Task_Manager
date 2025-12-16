@@ -18,30 +18,20 @@ public class WebSocketEventListener {
     // --- EVENTO DE CONEXIÓN ---
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectedEvent event) {
-        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+        StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
 
-        // El usuario ya fue autenticado y guardado en el header por JwtStompChannelInterceptor
-        UsernamePasswordAuthenticationToken auth = (UsernamePasswordAuthenticationToken) headerAccessor.getUser();
+        if (accessor.getUser() instanceof UsernamePasswordAuthenticationToken auth) {
 
-        if (auth != null) {
-            String userId = (String) auth.getPrincipal(); // El principal es el userId
-            presenceService.userConnected(userId);
-            System.out.println("STOMP Session connected for user: " + userId);
+            String userId = (String) auth.getPrincipal();
+            String sessionId = accessor.getSessionId();
+
+            presenceService.userConnected(sessionId, userId);
         }
     }
 
     // --- EVENTO DE DESCONEXIÓN ---
     @EventListener
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
-        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-
-        // Para la desconexión, el usuario permanece en el contexto de la sesión
-        UsernamePasswordAuthenticationToken auth = (UsernamePasswordAuthenticationToken) headerAccessor.getUser();
-
-        if (auth != null) {
-            String userId = (String) auth.getPrincipal();
-            presenceService.userDisconnected(userId);
-            System.out.println("STOMP Session disconnected for user: " + userId);
-        }
+        presenceService.userDisconnected(event.getSessionId());
     }
 }
