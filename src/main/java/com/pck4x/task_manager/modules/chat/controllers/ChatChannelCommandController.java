@@ -1,7 +1,10 @@
 package com.pck4x.task_manager.modules.chat.controllers;
 
 import com.pck4x.task_manager.modules.chat.objects.dtos.command.CreateChatChannelDto;
+import com.pck4x.task_manager.modules.chat.objects.dtos.command.SendMessageDto;
 import com.pck4x.task_manager.modules.chat.use_cases.command.CreateChatChannelCommand;
+import com.pck4x.task_manager.modules.chat.use_cases.command.EditMessageCommand;
+import com.pck4x.task_manager.modules.chat.use_cases.command.SendMessageCommand;
 import com.pck4x.task_manager.shared.helper.ResponseHelper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -24,14 +27,33 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ChatChannelCommandController {
     private final CreateChatChannelCommand createChatChannelCommand;
+    private final SendMessageCommand sendMessageCommand;
+    private final EditMessageCommand editMessageCommand;
 
     @PostMapping("/create-channel")
     @Operation(summary = "", description = "")
     public ResponseEntity<?> Create(
             @Parameter(hidden = true) @AuthenticationPrincipal String userId,
-            @RequestBody CreateChatChannelDto input
-    ){
+            @RequestBody CreateChatChannelDto input) {
         var result = createChatChannelCommand.execute(UUID.fromString(userId), input);
+        return ResponseHelper.toResponse(result);
+    }
+
+    @PostMapping("/send-message")
+    @Operation(summary = "", description = "")
+    public ResponseEntity<?> Send(
+            @Parameter(hidden = true) @AuthenticationPrincipal String userId,
+            @RequestBody SendMessageDto input) {
+        var result = sendMessageCommand.execute(UUID.fromString(userId), input);
+        return ResponseHelper.toResponse(result);
+    }
+
+    @org.springframework.web.bind.annotation.PutMapping("/edit-message")
+    @Operation(summary = "Edit a message", description = "Updates a message content if the user is the owner")
+    public ResponseEntity<?> Edit(
+            @Parameter(hidden = true) @AuthenticationPrincipal String userId,
+            @RequestBody com.pck4x.task_manager.modules.chat.objects.dtos.command.EditMessageDto input) {
+        var result = editMessageCommand.execute(UUID.fromString(userId), input);
         return ResponseHelper.toResponse(result);
     }
 }

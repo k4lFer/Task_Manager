@@ -9,14 +9,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -32,44 +29,32 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
 
-        final String authHeader = request.getHeader("Authorization");
-        final String jwt;
-        final String userId;
+        if (request.getServletPath().startsWith("/ws")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        jwt = authHeader.substring(7);
+        String jwt = authHeader.substring(7);
 
-        if (tokenProvider.validateToken(jwt, TokenType.ACCESS)) {
+        if (!tokenProvider.validateToken(jwt, TokenType.ACCESS)) {
+            SecurityContextHolder.clearContext();
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expired or invalid");
+            return;
+        }
 
-            userId = tokenProvider.extractSubject(jwt, TokenType.ACCESS);
+        String userId = tokenProvider.extractSubject(jwt, TokenType.ACCESS);
 
-            if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-
-                List<GrantedAuthority> authorities = new ArrayList<>();
-
-                /*
-                 *
-                 * String role = tokenProvider.extractClaim(jwt, "role", TokenType.ACCESS).toString();
-                 * if (role != null) {
-                 * authorities.add(new SimpleGrantedAuthority(role));
-                 * }
-                 */
-
-
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userId,
-                        null,
-                        authorities
-                );
-
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-            }
+        if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UsernamePasswordAuthenticationToken auth =
+                    new UsernamePasswordAuthenticationToken(userId, null, List.of());
+            SecurityContextHolder.getContext().setAuthentication(auth);
         }
 
         filterChain.doFilter(request, response);

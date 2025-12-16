@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -12,14 +14,16 @@ import java.util.UUID;
 public interface JpaWorkspaceRepository extends JpaRepository<WorkspaceEntity, UUID> {
     @EntityGraph(attributePaths = {
             "owner.person",
-            "workspaceMember.member.person"
+            "workspaceMember.member.person",
     })
-    @Override
-    Optional<WorkspaceEntity> findById(UUID id);
+    Optional<WorkspaceEntity> findWithDetailsById(UUID id);
 
     @EntityGraph(attributePaths = {
             "owner.person",
-            "workspaceMember.member.person" // Opcional si en la lista no muestras miembros
+            "workspaceMember.member.person"
     })
-    Page<WorkspaceEntity> findAllByOwnerId(UUID ownerId, Pageable pageable);
+    @Query("SELECT DISTINCT w FROM WorkspaceEntity w " +
+            "LEFT JOIN w.workspaceMember wm " +
+            "WHERE w.owner.id = :userId OR wm.member.id = :userId")
+    Page<WorkspaceEntity> findAllByOwnerOrMember(@Param("userId") UUID userId, Pageable pageable);
 }

@@ -11,4 +11,5 @@ public interface IUserRepository {
     Optional<TUser> findByUsername(String username);
     Optional<TUser> findByEmail(String email);
     Optional<MyProfileDto> getMyProfile(UUID id);
+    java.util.List<TUser> findAllById(java.util.List<UUID> ids);
 }

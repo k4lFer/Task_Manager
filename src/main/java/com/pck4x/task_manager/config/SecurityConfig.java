@@ -1,6 +1,7 @@
 package com.pck4x.task_manager.config;
 
 import com.pck4x.task_manager.config.filter.JwtAuthenticationFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +30,18 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Configuración CORS personalizada
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+                        })
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Forbidden");
+                        })
+                )
+
+
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers(
                                 "/v3/api-docs/**",
@@ -37,7 +49,8 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/auth/login",
                                 "/auth/register",
-                                "/auth/refresh-token"
+                                "/auth/refresh-token",
+                                "/ws/**"
                         ).permitAll()
                         .anyRequest().authenticated())
 
@@ -52,10 +65,11 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOriginPatterns(List.of("*"));
+        configuration.setAllowedOriginPatterns(List.of("http://localhost:4200"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "Accept"));
         configuration.setAllowCredentials(true);
+        configuration.setExposedHeaders(List.of("Set-Cookie"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

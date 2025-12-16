@@ -9,8 +9,8 @@ import java.util.UUID;
 @Data
 public class WorkspaceMemberDto {
     private UUID userId;
-    private String fullName; // Nombre concatenado
-    private String email;
+    private String fullName;
     private WorkspaceMemberRole role;
+    private Boolean itsYou;
     private Instant joinedAt;
 }

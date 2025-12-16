@@ -7,6 +7,7 @@ import com.pck4x.task_manager.modules.workspace.infrastructure.mapper.WorkspaceQ
 import com.pck4x.task_manager.modules.workspace.infrastructure.persistence.jpa.JpaWorkspaceRepository;
 import com.pck4x.task_manager.modules.workspace.interfaces.repositories.IWorkspaceRepository;
 import com.pck4x.task_manager.modules.workspace.objects.dtos.query.WorkspaceDetailDto;
+import com.pck4x.task_manager.modules.workspace.objects.dtos.query.WorkspaceDto;
 import com.pck4x.task_manager.shared.interfaces.QueryResult;
 import com.pck4x.task_manager.shared.objects.QueryDto;
 import lombok.RequiredArgsConstructor;
@@ -39,30 +40,37 @@ public class WorkspaceRepository implements IWorkspaceRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<WorkspaceDetailDto> getWorkspace(UUID id) {
+    public Optional<TWorkspace> getWorkspace(UUID id) {
         return jpa.findById(id)
-                .map(queryMapper::toDetailDto);
+                .map(workspaceMapper::toDomain);
+    }
+
+    @Override
+    public Optional<WorkspaceDetailDto> getWorkspaceByIdAndOwnerId(UUID id, UUID ownerId) {
+        return jpa.findWithDetailsById(id)
+                .map(entity -> queryMapper.toDetailDto(entity, ownerId));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public QueryResult<List<WorkspaceDetailDto>> getAllWorkspaceByOwnerId(UUID ownerId, QueryDto options) {
-        int pageIndex = Math.max(options.getPage() - 1, 0);
+    public QueryResult<List<WorkspaceDto>> getAllWorkspaceByOwnerId(UUID ownerId, Pageable pageable) {
+        int pageIndex = Math.max(pageable.getPageNumber(), 0);
 
-        Pageable pageable = PageRequest.of(pageIndex, options.getSize());
+        Pageable pageRequest = PageRequest.of(pageIndex, pageable.getPageSize());
 
-        Page<WorkspaceEntity> result = jpa.findAllByOwnerId(ownerId, pageable);
+        Page<WorkspaceEntity> result = jpa.findAllByOwnerOrMember(ownerId, pageRequest);
 
-        List<WorkspaceDetailDto> items = result
-                .map(queryMapper::toDetailDto)
+        List<WorkspaceDto> items = result
+                .map(entity -> queryMapper.toDto(entity, ownerId))
                 .toList();
 
         return QueryResult.success(
                 items,
                 (int) result.getTotalElements(),
                 result.getTotalPages(),
-                options.getPage(),
-                options.getSize()
+                result.getNumber(),
+                result.getSize()
         );
     }
+
 }

@@ -15,7 +15,7 @@ public class TChatChannel {
     private String description;
     private Instant createdAt;
 
-    public static TChatChannel create(UUID workspaceId, String name, String description){
+    public static TChatChannel create(UUID workspaceId, String name, String description) {
         return TChatChannel.builder()
                 .id(UUID.randomUUID())
                 .workspaceId(workspaceId)

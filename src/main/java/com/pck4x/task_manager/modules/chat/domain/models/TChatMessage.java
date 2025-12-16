@@ -9,6 +9,8 @@ import java.util.UUID;
 
 @Getter
 @Builder
+@lombok.AllArgsConstructor
+@lombok.NoArgsConstructor
 public class TChatMessage {
     private UUID id;
     private UUID chatChannelId;
@@ -17,4 +19,20 @@ public class TChatMessage {
     private JsonNode content;
     private Instant sentAt;
     private Instant editedAt;
+
+    public static TChatMessage create(UUID chatChannelId, UUID userId, String message, JsonNode content) {
+        return TChatMessage.builder()
+                .id(UUID.randomUUID())
+                .chatChannelId(chatChannelId)
+                .userId(userId)
+                .message(message)
+                .content(content)
+                .sentAt(Instant.now())
+                .build();
+    }
+
+    public void edit(String newMessage) {
+        this.message = newMessage;
+        this.editedAt = Instant.now();
+    }
 }

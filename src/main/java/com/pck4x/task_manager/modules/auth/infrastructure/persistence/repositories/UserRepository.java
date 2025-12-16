@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -37,5 +38,10 @@ public class UserRepository implements IUserRepository {
     @Override
     public Optional<MyProfileDto> getMyProfile(UUID id) {
         return jpa.findById(id).map(mapper::toMyDto);
+    }
+
+    @Override
+    public List<TUser> findAllById(java.util.List<UUID> ids) {
+        return jpa.findAllById(ids).stream().map(mapper::toDomain).toList();
     }
 }

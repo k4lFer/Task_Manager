@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/user")
-@Tag(name = "")
+@Tag(name = "User")
 @AllArgsConstructor
 public class AuthQueryController {
     private final GetMyProfileQuery getMyProfileQuery;
