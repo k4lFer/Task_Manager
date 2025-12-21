@@ -3,13 +3,11 @@ package com.pck4x.task_manager.modules.workspace.infrastructure.persistence.repo
 import com.pck4x.task_manager.modules.workspace.domain.models.TWorkspace;
 import com.pck4x.task_manager.modules.workspace.infrastructure.entities.WorkspaceEntity;
 import com.pck4x.task_manager.modules.workspace.infrastructure.mapper.WorkspaceMapper;
-import com.pck4x.task_manager.modules.workspace.infrastructure.mapper.WorkspaceQueryMapper;
 import com.pck4x.task_manager.modules.workspace.infrastructure.persistence.jpa.JpaWorkspaceRepository;
 import com.pck4x.task_manager.modules.workspace.interfaces.repositories.IWorkspaceRepository;
 import com.pck4x.task_manager.modules.workspace.objects.dtos.query.WorkspaceDetailDto;
 import com.pck4x.task_manager.modules.workspace.objects.dtos.query.WorkspaceDto;
 import com.pck4x.task_manager.shared.interfaces.QueryResult;
-import com.pck4x.task_manager.shared.objects.QueryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,7 +23,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class WorkspaceRepository implements IWorkspaceRepository {
     private final WorkspaceMapper workspaceMapper;
-    private final WorkspaceQueryMapper queryMapper;
     private final JpaWorkspaceRepository jpa;
 
     @Override
@@ -46,26 +43,37 @@ public class WorkspaceRepository implements IWorkspaceRepository {
     }
 
     @Override
-    public Optional<WorkspaceDetailDto> getWorkspaceByIdAndOwnerId(UUID id, UUID ownerId) {
-        return jpa.findWithDetailsById(id)
-                .map(entity -> queryMapper.toDetailDto(entity, ownerId));
+    @Transactional(readOnly = true)
+    public Optional<WorkspaceDetailDto> getWorkspaceByIdAndOwnerId(
+            UUID workspaceId,
+            UUID userId
+    ) {
+        return jpa.findWorkspaceDetailBase(workspaceId, userId)
+                .map(base -> new WorkspaceDetailDto(
+                        base.id(),
+                        base.name(),
+                        base.description(),
+                        base.isPrivate(),
+                        base.isOwner(),
+                        base.ownerId(),
+                        base.ownerName(),
+                        jpa.findMembers(workspaceId, userId),
+                        jpa.findChannels(workspaceId),
+                        base.createdAt()
+                ));
     }
 
     @Override
     @Transactional(readOnly = true)
     public QueryResult<List<WorkspaceDto>> getAllWorkspaceByOwnerId(UUID ownerId, Pageable pageable) {
         int pageIndex = Math.max(pageable.getPageNumber(), 0);
-
         Pageable pageRequest = PageRequest.of(pageIndex, pageable.getPageSize());
 
-        Page<WorkspaceEntity> result = jpa.findAllByOwnerOrMember(ownerId, pageRequest);
-
-        List<WorkspaceDto> items = result
-                .map(entity -> queryMapper.toDto(entity, ownerId))
-                .toList();
+        Page<WorkspaceDto> result =
+                jpa.findAllByOwnerOrMember(ownerId, pageRequest);
 
         return QueryResult.success(
-                items,
+                result.getContent(),
                 (int) result.getTotalElements(),
                 result.getTotalPages(),
                 result.getNumber(),

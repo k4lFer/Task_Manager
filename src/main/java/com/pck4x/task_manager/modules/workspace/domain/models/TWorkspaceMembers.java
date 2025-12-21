@@ -16,9 +16,6 @@ public class TWorkspaceMembers {
     private WorkspaceMemberRole role;
     private Instant createdAt;
 
-    private TWorkspace workspace;
-
-
     public static TWorkspaceMembers create(UUID workspaceId, UUID memberId)
     {
         return TWorkspaceMembers.builder()

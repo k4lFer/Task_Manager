@@ -40,13 +40,4 @@ public class UserEntity {
     @JoinColumn(name = "person_id", referencedColumnName = "id", nullable = false, unique = true)
     private PersonEntity person;
 
-    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
-    private List<WorkspaceEntity> workspace;
-
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
-    private List<WorkspaceMemberEntity> workspaceMember;
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<ChatMessageEntity> chatMessage;
-
 }

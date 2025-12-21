@@ -1,6 +1,5 @@
 package com.pck4x.task_manager.modules.chat.infrastructure.entities;
 
-import com.pck4x.task_manager.modules.workspace.infrastructure.entities.WorkspaceEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,9 +19,8 @@ public class ChatChannelEntity {
     @Id
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "workspace_id", nullable = false)
-    private WorkspaceEntity workspace;
+    @Column(name = "workspace_id", nullable = false)
+    private UUID workspaceId;
 
     @Column(name = "name")
     private String name;

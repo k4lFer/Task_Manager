@@ -1,6 +1,5 @@
 package com.pck4x.task_manager.modules.workspace.infrastructure.entities;
 
-import com.pck4x.task_manager.modules.auth.infrastructure.entities.UserEntity;
 import com.pck4x.task_manager.modules.workspace.objects.enums.WorkspaceMemberRole;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,9 +23,9 @@ public class WorkspaceMemberEntity {
     @JoinColumn(name = "workspace_id", nullable = false)
     private WorkspaceEntity workspace;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
-    private UserEntity member;
+
+    @Column(name = "member_id", nullable = false)
+    private UUID memberId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)

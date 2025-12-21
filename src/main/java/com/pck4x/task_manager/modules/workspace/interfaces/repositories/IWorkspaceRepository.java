@@ -13,6 +13,6 @@ import java.util.UUID;
 public interface IWorkspaceRepository {
     TWorkspace create(TWorkspace workspace);
     Optional<TWorkspace> getWorkspace(UUID id);
-    Optional<WorkspaceDetailDto> getWorkspaceByIdAndOwnerId(UUID id, UUID ownerId);
+    Optional<WorkspaceDetailDto> getWorkspaceByIdAndOwnerId(UUID workspaceId, UUID ownerId);
     QueryResult<List<WorkspaceDto>> getAllWorkspaceByOwnerId(UUID ownerId, Pageable pageable);
 }

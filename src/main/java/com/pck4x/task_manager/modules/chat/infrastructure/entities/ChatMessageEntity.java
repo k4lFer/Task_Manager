@@ -1,7 +1,6 @@
 package com.pck4x.task_manager.modules.chat.infrastructure.entities;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.pck4x.task_manager.modules.auth.infrastructure.entities.UserEntity;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -25,9 +24,8 @@ public class ChatMessageEntity {
     @JoinColumn(name = "chat_channel_id", nullable = false)
     private ChatChannelEntity chatChannel;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity user;
+    @Column(name = "user_id", nullable = false)
+    private UUID userId;
 
     @Column(name = "message", columnDefinition = "text")
     private String message;

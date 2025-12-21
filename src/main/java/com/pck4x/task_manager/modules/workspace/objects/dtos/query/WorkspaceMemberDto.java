@@ -6,11 +6,10 @@ import lombok.Data;
 import java.time.Instant;
 import java.util.UUID;
 
-@Data
-public class WorkspaceMemberDto {
-    private UUID userId;
-    private String fullName;
-    private WorkspaceMemberRole role;
-    private Boolean itsYou;
-    private Instant joinedAt;
-}
+public record WorkspaceMemberDto(
+        UUID userId,
+        String fullName,
+        WorkspaceMemberRole role,
+        Boolean itsYou,
+        Instant joinedAt
+) {}

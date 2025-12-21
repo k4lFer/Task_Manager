@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -25,23 +26,20 @@ public class ChatChannelRepository implements IChatChannelRepository {
         ChatChannelEntity channel = chatChannelMapper.toEntity(chatChannel);
         ChatChannelEntity saved = jpa.save(channel);
         return chatChannelMapper.toDomain(saved);
+
     }
 
     @Override
-    public java.util.Optional<TChatChannel> findById(UUID id) {
-        return jpa.findById(id).map(chatChannelMapper::toDomain);
+    public Optional<TChatChannel> findById(UUID id) {
+       return jpa.findById(id).map(chatChannelMapper::toDomain);
     }
 
     @Override
     public QueryResult<List<WorkspaceChannelDto>> getChannelsByWorkspaceId(UUID workspaceId, Pageable pageable) {
         var page = jpa.findByWorkspaceId(workspaceId, pageable);
 
-        var dtos = page.getContent().stream()
-                .map(chatChannelMapper::toDto)
-                .toList();
-
         return QueryResult.success(
-                dtos,
+                page.getContent(),
                 (int) page.getTotalElements(),
                 page.getTotalPages(),
                 page.getNumber(),

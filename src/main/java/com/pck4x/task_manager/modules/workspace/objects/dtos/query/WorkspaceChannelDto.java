@@ -4,9 +4,9 @@ import lombok.Data;
 
 import java.util.UUID;
 
-@Data
-public class WorkspaceChannelDto {
-    private UUID id;
-    private String name;
-    private String description;
-}
+public record WorkspaceChannelDto(
+        UUID id,
+        String name,
+        String description
+) {}
+

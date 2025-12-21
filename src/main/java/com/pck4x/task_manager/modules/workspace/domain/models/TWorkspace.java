@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Getter
 @Builder
-public class TWorkspace {
+public class  TWorkspace {
     private UUID id;
     private UUID ownerId;
     private String name;

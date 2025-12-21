@@ -1,7 +1,5 @@
 package com.pck4x.task_manager.modules.workspace.infrastructure.entities;
 
-import com.pck4x.task_manager.modules.auth.infrastructure.entities.UserEntity;
-import com.pck4x.task_manager.modules.chat.infrastructure.entities.ChatChannelEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Fetch;
@@ -21,9 +19,8 @@ public class WorkspaceEntity {
     @Id
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id", nullable = false)
-    private UserEntity owner;
+    @Column(name = "owner_id", nullable = false)
+    private UUID ownerId;
 
     @Column(name = "name")
     private String name;
@@ -46,5 +43,5 @@ public class WorkspaceEntity {
 
     @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, orphanRemoval = true)
     @Fetch(FetchMode.SUBSELECT)
-    private List<ChatChannelEntity> chatChannel = new ArrayList<>();
+    private List<WorkspaceInvitationEntity> workspaceInvitation = new ArrayList<>();
 }

@@ -33,13 +33,8 @@ public class ChatMessageRepository implements IChatMessageRepository {
 
     @Override
     public Optional<TChatMessage> findById(UUID id) {
-        return jpa.findById(id).map(mapper::toDomain);
+       return jpa.findById(id).map(mapper::toDomain);
     }
-
-   /* @Override
-    public Page<TChatMessage> findByChannelId(UUID channelId, Pageable pageable) {
-        return jpa.findByChatChannelId(channelId, pageable).map(mapper::toDomain);
-    }*/
 
     @Override
     public QueryResult<List<ChatMessageResponseDto>> findChatsByChannelId(UUID channelId, Pageable pageable) {
@@ -47,14 +42,10 @@ public class ChatMessageRepository implements IChatMessageRepository {
 
         Pageable pageRequest = PageRequest.of(pageIndex, pageable.getPageSize());
 
-        Page<ChatMessageEntity> result = jpa.findByChatChannelId(channelId, pageRequest);
-
-        List<ChatMessageResponseDto> items = result
-                .map(mapper::toDto)
-                .toList();
+        var result = jpa.findByChatChannelId(channelId, pageRequest);
 
         return QueryResult.success(
-                items,
+                result.getContent(),
                 (int) result.getTotalElements(),
                 result.getTotalPages(),
                 result.getNumber(),
