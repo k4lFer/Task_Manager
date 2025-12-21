@@ -8,4 +8,5 @@ public interface IWorkspaceInvitationRepository {
     TWorkspaceInvitation save(TWorkspaceInvitation tWorkspaceInvitation);
     Boolean existsPending(UUID workspaceId, UUID memberId, String email);
     Boolean existsPendingByEmail(UUID workspaceId, String email);
+    TWorkspaceInvitation findById(UUID id);
 }

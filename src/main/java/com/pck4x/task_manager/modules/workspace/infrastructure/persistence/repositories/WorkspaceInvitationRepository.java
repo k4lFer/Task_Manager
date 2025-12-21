@@ -60,4 +60,9 @@ public class WorkspaceInvitationRepository implements IWorkspaceInvitationReposi
                 WorkspaceInvitationStatus.PENDING
         );
     }
+
+    @Override
+    public TWorkspaceInvitation findById(UUID id) {
+        return null;
+    }
 }

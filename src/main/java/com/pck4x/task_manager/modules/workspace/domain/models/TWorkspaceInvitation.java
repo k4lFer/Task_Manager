@@ -1,7 +1,9 @@
 package com.pck4x.task_manager.modules.workspace.domain.models;
 
+import com.pck4x.task_manager.modules.workspace.domain.events.WorkspaceInvitationAcceptedEvent;
 import com.pck4x.task_manager.modules.workspace.objects.enums.WorkspaceInvitationRole;
 import com.pck4x.task_manager.modules.workspace.objects.enums.WorkspaceInvitationStatus;
+import com.pck4x.task_manager.shared.domain.repository.TGenericDomain;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -11,7 +13,7 @@ import java.util.UUID;
 
 @Getter
 @Builder
-public class TWorkspaceInvitation {
+public class TWorkspaceInvitation extends TGenericDomain {
     private UUID id;
     private UUID workspaceId;
     private UUID invitedBy;
@@ -42,7 +44,8 @@ public class TWorkspaceInvitation {
 
     public void accept() {
         this.status = WorkspaceInvitationStatus.ACCEPTED;
+        this.respondedAt = Instant.now();
+
+        domainEvents.add(new WorkspaceInvitationAcceptedEvent(this.invitedUserId, this.role));
     }
-
-
 }
