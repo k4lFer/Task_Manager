@@ -1,7 +1,6 @@
 package com.pck4x.task_manager.modules.workspace.infrastructure.persistence.repositories;
 
 import com.pck4x.task_manager.modules.workspace.domain.models.TWorkspaceInvitation;
-import com.pck4x.task_manager.modules.workspace.infrastructure.entities.WorkspaceEntity;
 import com.pck4x.task_manager.modules.workspace.infrastructure.entities.WorkspaceInvitationEntity;
 import com.pck4x.task_manager.modules.workspace.infrastructure.mapper.WorkspaceInvitationMapper;
 import com.pck4x.task_manager.modules.workspace.infrastructure.persistence.jpa.JpaWorkspaceInvitationRepository;
@@ -11,6 +10,7 @@ import com.pck4x.task_manager.modules.workspace.objects.enums.WorkspaceInvitatio
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -33,6 +33,11 @@ public class WorkspaceInvitationRepository implements IWorkspaceInvitationReposi
         WorkspaceInvitationEntity saved = jpa.save(entity);
 
         return mapper.toDomain(saved);
+    }
+
+    @Override
+    public TWorkspaceInvitation patch() {
+        return null;
     }
 
     @Override
@@ -62,7 +67,7 @@ public class WorkspaceInvitationRepository implements IWorkspaceInvitationReposi
     }
 
     @Override
-    public TWorkspaceInvitation findById(UUID id) {
-        return null;
+    public Optional<TWorkspaceInvitation> findById(UUID id) {
+        return jpa.findById(id).map(mapper::toDomain);
     }
 }

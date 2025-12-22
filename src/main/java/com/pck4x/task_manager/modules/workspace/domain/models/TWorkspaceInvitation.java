@@ -46,6 +46,6 @@ public class TWorkspaceInvitation extends TGenericDomain {
         this.status = WorkspaceInvitationStatus.ACCEPTED;
         this.respondedAt = Instant.now();
 
-        domainEvents.add(new WorkspaceInvitationAcceptedEvent(this.invitedUserId, this.role));
+        domainEvents.add(new WorkspaceInvitationAcceptedEvent(this.workspaceId, this.invitedUserId, this.role, this.respondedAt));
     }
 }

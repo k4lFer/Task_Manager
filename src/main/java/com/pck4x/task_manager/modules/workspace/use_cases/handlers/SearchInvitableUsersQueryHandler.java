@@ -60,6 +60,7 @@ public class SearchInvitableUsersQueryHandler implements SearchInvitableUsersQue
                             canInvite,
                             alreadyMember,
                             pendingInvitation,
+                            user.id(),
                             user.email(),
                             fullName,
                             reason
