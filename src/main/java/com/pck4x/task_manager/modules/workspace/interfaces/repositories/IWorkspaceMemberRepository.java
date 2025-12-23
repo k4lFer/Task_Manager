@@ -10,7 +10,5 @@ public interface IWorkspaceMemberRepository {
 
     void deleteMember(UUID memberId);
 
-    void addMember(UUID memberId);
-
     Optional<TWorkspaceMembers> findByWorkspaceIdAndMemberId(UUID workspaceId, UUID memberId);
 }

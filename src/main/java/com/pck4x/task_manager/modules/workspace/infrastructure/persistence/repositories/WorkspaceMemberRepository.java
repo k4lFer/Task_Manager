@@ -19,16 +19,13 @@ public class WorkspaceMemberRepository implements IWorkspaceMemberRepository {
 
     @Override
     public TWorkspaceMembers save(TWorkspaceMembers workspaceMembers) {
-        return null;
+        var entity = workspaceMemberMapper.toEntity(workspaceMembers);
+        var saved = jpaWorkspaceMemberRepository.save(entity);
+        return workspaceMemberMapper.toDomain(saved);
     }
 
     @Override
     public void deleteMember(UUID memberId) {
-
-    }
-
-    @Override
-    public void addMember(UUID memberId) {
 
     }
 

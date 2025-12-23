@@ -4,6 +4,7 @@ import com.pck4x.task_manager.modules.auth.use_cases.event.UserCreatedEvent;
 import com.pck4x.task_manager.modules.workspace.domain.models.TWorkspace;
 import com.pck4x.task_manager.modules.workspace.domain.models.TWorkspaceMembers;
 import com.pck4x.task_manager.modules.workspace.interfaces.repositories.IWorkspaceRepository;
+import com.pck4x.task_manager.modules.workspace.objects.enums.WorkspaceMemberRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.event.TransactionalEventListener;
@@ -23,7 +24,10 @@ public class UserCreatedEventHandler {
 
         var workspaceMember = TWorkspaceMembers.create(
                 workspace.getId(),
-                event.id());
+                event.id(),
+                WorkspaceMemberRole.OWNER,
+                event.createdAt()
+        );
         workspace.attachWorkspace(workspaceMember);
 
         workspaceRepository.create(workspace);

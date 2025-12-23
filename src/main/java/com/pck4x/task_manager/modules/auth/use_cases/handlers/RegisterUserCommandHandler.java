@@ -40,7 +40,8 @@ public class RegisterUserCommandHandler implements RegisterUserCommand {
         if (saved != null) {
             eventPublisher.publishEvent(
                     new UserCreatedEvent(
-                            user.getId()
+                            user.getId(),
+                            user.getCreatedAt()
                     )
             );
             return Result.create(user.getId(), "User registered successfully");

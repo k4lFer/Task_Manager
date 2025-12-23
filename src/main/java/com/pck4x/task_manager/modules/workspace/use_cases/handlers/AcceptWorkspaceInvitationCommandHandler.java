@@ -20,7 +20,7 @@ public class AcceptWorkspaceInvitationCommandHandler implements AcceptWorkspaceI
 
     @Override
     @Transactional
-    public Result execute(UUID id, UUID invitationId) {
+    public Result<UUID> execute(UUID id, UUID invitationId) {
         var result = invitationRepository.findById(invitationId);
 
         if (result.isEmpty()) return Result.notFound("Invitation not found");

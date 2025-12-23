@@ -16,14 +16,14 @@ public class TWorkspaceMembers {
     private WorkspaceMemberRole role;
     private Instant createdAt;
 
-    public static TWorkspaceMembers create(UUID workspaceId, UUID memberId)
+    public static TWorkspaceMembers create(UUID workspaceId, UUID memberId, WorkspaceMemberRole role, Instant createdAt)
     {
         return TWorkspaceMembers.builder()
                 .id(UUID.randomUUID())
                 .workspaceId(workspaceId)
                 .memberId(memberId)
-                .role(WorkspaceMemberRole.OWNER)
-                .createdAt(Instant.now())
+                .role(role)
+                .createdAt(createdAt)
                 .build();
     }
 
