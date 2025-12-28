@@ -7,22 +7,20 @@ import java.net.URI;
 
 public class ResponseHelper {
 
-    public static <T> ResponseEntity<Result<T>> toResponse(Result<T> result) {
-        int code = switch (result.getStatus()) {
-            case "OK" -> 200;
-            case "CREATED" -> 201;
-            case "NO_CONTENT" -> 204;
-            case "BAD_REQUEST" -> 400;
-            case "NOT_FOUND" -> 404;
-            case "CONFLICT" -> 409;
-            case "INTERNAL_SERVER_ERROR" -> 500;
-            default -> 200;
-        };
+    public static <T> ResponseEntity<ApiResponse<T>> toResponse(Result<T> result) {
 
-        return switch (code) {
-            case 201 -> ResponseEntity.created(URI.create("")).body(result);
-            case 204 -> ResponseEntity.noContent().build();
-            default -> ResponseEntity.status(code).body(result);
-        };
+        int status = result.getStatus().value();
+
+        if (status == 204) {
+            return ResponseEntity.noContent().build();
+        }
+
+        var body = new ApiResponse<>(
+                result.isSuccess(),
+                result.getData(),
+                result.getMessages()
+        );
+
+        return ResponseEntity.status(status).body(body);
     }
 }

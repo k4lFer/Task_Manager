@@ -13,8 +13,15 @@ public class RefreshTokenCommandHandler implements RefreshTokenCommand {
 
     @Override
     public Result<String> execute(String input) {
+        if (input == null || input.isBlank()) {
+            return Result.error("Refresh token is required");
+        }
+
         var newToken = jwtService.generateAccessTokenByRefreshToken(input);
-        if (newToken.isEmpty()) return Result.error("");
+
+        if (newToken.isEmpty()) {
+            return Result.error("Invalid or expired refresh token");
+        }
 
         return Result.success(newToken, "Generated access token");
     }

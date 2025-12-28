@@ -7,6 +7,7 @@ import com.pck4x.task_manager.modules.auth.use_cases.command.RefreshTokenCommand
 import com.pck4x.task_manager.modules.auth.use_cases.command.RegisterUserCommand;
 import com.pck4x.task_manager.modules.auth.use_cases.command.SignInCommand;
 import com.pck4x.task_manager.shared.helper.ResponseHelper;
+import com.pck4x.task_manager.shared.result.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,9 +36,24 @@ public class AuthCommandController {
     @Operation(summary = "", description = "")
     public ResponseEntity<?> Login(@RequestBody SignInDto input, HttpServletResponse response){
         var result = signInCommand.execute(input);
-        cookieService.setRefreshTokenCookie(response, result.getData().getRefreshToken());
+        if (result.isSuccess() && result.getData() != null) {
+            cookieService.setRefreshTokenCookie(
+                    response,
+                    result.getData().getRefreshToken()
+            );
+        }
         return ResponseHelper.toResponse(result);
     }
+
+    @PostMapping("/logout")
+    @Operation(summary = "", description = "")
+    public ResponseEntity<?> Logout(HttpServletResponse response){
+        cookieService.removeRefreshTokenCookie(response);
+        return ResponseHelper.toResponse(
+                Result.success(null, "Logout successful")
+        );
+    }
+
 
     @PostMapping("/refresh-token")
     @Operation(summary = "", description = "")

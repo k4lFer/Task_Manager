@@ -28,7 +28,7 @@ public class SignInCommandHandler implements SignInCommand {
         var user = userOptional.get();
 
         if (!passwordEncoder.matches(input.getPassword(), user.getPassword())) {
-            return Result.error("Invalid credentials");
+            return Result.notFound("Invalid credentials");
         }
 
         var accessToken = jwtService.generateAccessToken(user.getId());
