@@ -48,4 +48,8 @@ public class TWorkspaceInvitation extends TGenericDomain {
 
         domainEvents.add(new WorkspaceInvitationAcceptedEvent(this.workspaceId, this.invitedUserId, this.role, this.respondedAt));
     }
+
+    public void expired() {
+        this.status = WorkspaceInvitationStatus.EXPIRED;
+    }
 }

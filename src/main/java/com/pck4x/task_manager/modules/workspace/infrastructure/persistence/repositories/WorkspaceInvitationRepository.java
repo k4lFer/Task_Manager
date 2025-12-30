@@ -36,8 +36,15 @@ public class WorkspaceInvitationRepository implements IWorkspaceInvitationReposi
     }
 
     @Override
-    public TWorkspaceInvitation patch() {
-        return null;
+    public TWorkspaceInvitation updateStatus(TWorkspaceInvitation tWorkspaceInvitation) {
+        WorkspaceInvitationEntity entity = jpa.findById(tWorkspaceInvitation.getId())
+                .orElseThrow(() -> new IllegalStateException("Invitation not found"));
+
+        entity.setStatus(tWorkspaceInvitation.getStatus());
+        entity.setRespondedAt(tWorkspaceInvitation.getRespondedAt());
+
+        WorkspaceInvitationEntity saved = jpa.save(entity);
+        return mapper.toDomain(saved);
     }
 
     @Override

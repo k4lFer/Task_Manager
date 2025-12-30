@@ -46,7 +46,7 @@ public class WorkspaceInvitationEntity {
     @Column(name = "expires_at", columnDefinition = "timestamptz")
     private Instant expiresAt;
 
-    @Column(name = "responded_at", columnDefinition = "timestamptz")
+    @Column(name = "responded_at", columnDefinition = "timestamptz", nullable = true)
     private Instant respondedAt;
 
     @Column(name = "created_at", columnDefinition = "timestamptz")

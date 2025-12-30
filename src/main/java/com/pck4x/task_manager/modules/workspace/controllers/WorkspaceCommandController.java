@@ -2,6 +2,7 @@ package com.pck4x.task_manager.modules.workspace.controllers;
 
 import com.pck4x.task_manager.modules.workspace.objects.dtos.command.CreateWorkspaceDto;
 import com.pck4x.task_manager.modules.workspace.objects.dtos.command.SendWorkspaceInvitationDto;
+import com.pck4x.task_manager.modules.workspace.use_cases.command.AcceptWorkspaceInvitationCommand;
 import com.pck4x.task_manager.modules.workspace.use_cases.command.CreateWorkspaceCommand;
 import com.pck4x.task_manager.modules.workspace.use_cases.command.SendWorkspaceInvitationCommand;
 import com.pck4x.task_manager.shared.helper.ResponseHelper;
@@ -24,6 +25,7 @@ import java.util.UUID;
 public class WorkspaceCommandController {
     private final SendWorkspaceInvitationCommand sendWorkspaceInvitationCommand;
     private final CreateWorkspaceCommand createWorkspaceCommand;
+    private final AcceptWorkspaceInvitationCommand acceptWorkspaceInvitationCommand;
 
     @PostMapping("/create")
     @Operation(
@@ -60,7 +62,8 @@ public class WorkspaceCommandController {
             @Parameter(hidden = true) @AuthenticationPrincipal String userId,
             @PathVariable UUID invitationId
     ) {
-        return ResponseEntity.ok().build();
+        var result = acceptWorkspaceInvitationCommand.execute(UUID.fromString(userId), invitationId);
+        return ResponseHelper.toResponse(result);
     }
 
     @PostMapping("/invitations/{invitationId}/reject")
@@ -99,8 +102,5 @@ public class WorkspaceCommandController {
     ) {
         return ResponseEntity.ok().build();
     }
-
-
-
 
 }

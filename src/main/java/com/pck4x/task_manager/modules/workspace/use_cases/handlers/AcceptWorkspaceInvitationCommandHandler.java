@@ -27,7 +27,11 @@ public class AcceptWorkspaceInvitationCommandHandler implements AcceptWorkspaceI
 
         var invitation = result.get();
 
-        if (invitation.getExpiresAt().isBefore(Instant.now())) return Result.forbidden("Invitation expired");
+        if (invitation.getExpiresAt().isBefore(Instant.now())) {
+            invitation.expired();
+            invitationRepository.updateStatus(invitation);
+            return Result.forbidden("Invitation expired");
+        }
 
         if (invitation.getStatus() != WorkspaceInvitationStatus.PENDING) return Result.forbidden("Invitation already processed");
 
@@ -35,7 +39,7 @@ public class AcceptWorkspaceInvitationCommandHandler implements AcceptWorkspaceI
 
         invitation.accept();
 
-        invitationRepository.save(invitation);
+        invitationRepository.updateStatus(invitation);
 
         domainEventPublisher.publishFrom(invitation);
 

@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public interface IWorkspaceInvitationRepository {
     TWorkspaceInvitation save(TWorkspaceInvitation tWorkspaceInvitation);
-    TWorkspaceInvitation patch();
+    TWorkspaceInvitation updateStatus(TWorkspaceInvitation tWorkspaceInvitation);
     Boolean existsPending(UUID workspaceId, UUID memberId, String email);
     Boolean existsPendingByEmail(UUID workspaceId, String email);
     Optional<TWorkspaceInvitation> findById(UUID id);
