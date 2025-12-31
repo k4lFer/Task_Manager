@@ -19,7 +19,7 @@ public class ListEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id", nullable = false)
-    private BoardEntity workspace;
+    private BoardEntity board;
 
     @Column(name = "name")
     private String name;

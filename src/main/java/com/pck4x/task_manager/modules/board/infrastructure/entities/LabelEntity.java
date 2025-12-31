@@ -25,7 +25,7 @@ public class LabelEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id", nullable = false)
-    private BoardEntity workspace;
+    private BoardEntity board;
 
     @Column(name = "created_at", columnDefinition = "timestamptz")
     private Instant createdAt;
