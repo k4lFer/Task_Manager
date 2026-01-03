@@ -6,7 +6,11 @@ import com.pck4x.task_manager.modules.workspace.domain.models.TWorkspaceMembers;
 import com.pck4x.task_manager.modules.workspace.interfaces.repositories.IWorkspaceRepository;
 import com.pck4x.task_manager.modules.workspace.objects.enums.WorkspaceMemberRole;
 import lombok.RequiredArgsConstructor;
+import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 @Service
@@ -14,7 +18,9 @@ import org.springframework.transaction.event.TransactionalEventListener;
 public class UserCreatedEventHandler {
     private final IWorkspaceRepository workspaceRepository;
 
-    @TransactionalEventListener
+    @ApplicationModuleListener
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void on(UserCreatedEvent event) {
         var workspace = TWorkspace.create(
                 event.id(),
