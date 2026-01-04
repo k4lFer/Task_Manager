@@ -1,8 +1,7 @@
 package com.pck4x.task_manager.modules.workspace.controllers;
 
-import com.pck4x.task_manager.modules.workspace.use_cases.query.GetAllMyWorkspacesQuery;
-import com.pck4x.task_manager.modules.workspace.use_cases.query.GetWorkspacesByIdQuery;
-import com.pck4x.task_manager.modules.workspace.use_cases.query.SearchInvitableUsersQuery;
+import com.pck4x.task_manager.modules.workspace.objects.enums.WorkspaceInvitationStatus;
+import com.pck4x.task_manager.modules.workspace.use_cases.query.*;
 import com.pck4x.task_manager.shared.helper.ResponseHelper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -26,6 +25,8 @@ public class WorkspaceQueryController {
     private final GetAllMyWorkspacesQuery getAllMyWorkspacesQuery;
     private final GetWorkspacesByIdQuery getWorkspacesByIdQuery;
     private final SearchInvitableUsersQuery searchInvitableUsersQuery;
+    private final GetReceivedInvitationsQuery getReceivedInvitationsQuery;
+    private final GetSentInvitationsQuery getSentInvitationsQuery;
 
     @GetMapping("/all-my-workspaces")
     @Operation(
@@ -74,9 +75,14 @@ public class WorkspaceQueryController {
     )
     public ResponseEntity<?> InvitationsSent(
             @Parameter(hidden = true) @AuthenticationPrincipal String userId,
-            @ParameterObject Pageable pageable
+
+            @ParameterObject Pageable pageable,
+
+            @RequestParam(required = false)
+            WorkspaceInvitationStatus status
     ) {
-        return ResponseEntity.ok().body("");
+        var result = getSentInvitationsQuery.execute(UUID.fromString(userId), pageable, status);
+        return ResponseHelper.toResponse(result);
     }
 
     @GetMapping("/invitations/received")
@@ -86,9 +92,14 @@ public class WorkspaceQueryController {
     )
     public ResponseEntity<?> InvitationsReceived(
             @Parameter(hidden = true) @AuthenticationPrincipal String userId,
-            @ParameterObject Pageable pageable
+
+            @ParameterObject Pageable pageable,
+
+            @RequestParam(required = false)
+            WorkspaceInvitationStatus status
     ) {
-        return ResponseEntity.ok().body("");
+        var result = getReceivedInvitationsQuery.execute(UUID.fromString(userId), pageable, status);
+        return ResponseHelper.toResponse(result);
     }
 
 }

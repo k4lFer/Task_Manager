@@ -4,9 +4,9 @@ import com.pck4x.task_manager.modules.workspace.objects.enums.WorkspaceInvitatio
 
 import java.util.UUID;
 
-public record GetReceivedInvitationsResponse(
+public record GetSentInvitationsResponse(
         UUID id,
-        String invitedByName,
+        String invitedName,
         UUID workspaceId,
         String workspaceName,
         WorkspaceInvitationStatus status
