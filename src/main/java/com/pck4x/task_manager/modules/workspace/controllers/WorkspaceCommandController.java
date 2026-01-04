@@ -2,9 +2,7 @@ package com.pck4x.task_manager.modules.workspace.controllers;
 
 import com.pck4x.task_manager.modules.workspace.objects.dtos.command.CreateWorkspaceDto;
 import com.pck4x.task_manager.modules.workspace.objects.dtos.command.SendWorkspaceInvitationDto;
-import com.pck4x.task_manager.modules.workspace.use_cases.command.AcceptWorkspaceInvitationCommand;
-import com.pck4x.task_manager.modules.workspace.use_cases.command.CreateWorkspaceCommand;
-import com.pck4x.task_manager.modules.workspace.use_cases.command.SendWorkspaceInvitationCommand;
+import com.pck4x.task_manager.modules.workspace.use_cases.command.*;
 import com.pck4x.task_manager.shared.helper.ResponseHelper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -26,6 +24,8 @@ public class WorkspaceCommandController {
     private final SendWorkspaceInvitationCommand sendWorkspaceInvitationCommand;
     private final CreateWorkspaceCommand createWorkspaceCommand;
     private final AcceptWorkspaceInvitationCommand acceptWorkspaceInvitationCommand;
+    private final RejectWorkspaceInvitationCommand rejectWorkspaceInvitationCommand;
+    private final CancelWorkspaceInvitationCommand cancelWorkspaceInvitationCommand;
 
     @PostMapping("/create")
     @Operation(
@@ -75,7 +75,8 @@ public class WorkspaceCommandController {
             @Parameter(hidden = true) @AuthenticationPrincipal String userId,
             @PathVariable UUID invitationId
     ) {
-        return ResponseEntity.ok().build();
+        var result = rejectWorkspaceInvitationCommand.execute(UUID.fromString(userId), invitationId);
+        return ResponseHelper.toResponse(result);
     }
 
     @PostMapping("/invitations/{invitationId}/cancel")
@@ -87,7 +88,8 @@ public class WorkspaceCommandController {
             @Parameter(hidden = true) @AuthenticationPrincipal String userId,
             @PathVariable UUID invitationId
     ) {
-        return ResponseEntity.ok().build();
+        var result = cancelWorkspaceInvitationCommand.execute(UUID.fromString(userId), invitationId);
+        return ResponseHelper.toResponse(result);
     }
 
     @PostMapping("/{workspaceId}/members/{memberId}/remove")

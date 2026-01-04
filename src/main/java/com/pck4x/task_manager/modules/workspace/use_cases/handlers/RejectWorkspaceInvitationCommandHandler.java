@@ -2,10 +2,9 @@ package com.pck4x.task_manager.modules.workspace.use_cases.handlers;
 
 import com.pck4x.task_manager.modules.workspace.interfaces.repositories.IWorkspaceInvitationRepository;
 import com.pck4x.task_manager.modules.workspace.objects.enums.WorkspaceInvitationStatus;
-import com.pck4x.task_manager.modules.workspace.use_cases.command.AcceptWorkspaceInvitationCommand;
-import com.pck4x.task_manager.shared.application.adapter.DomainEventPublisher;
+import com.pck4x.task_manager.modules.workspace.use_cases.command.RejectWorkspaceInvitationCommand;
 import com.pck4x.task_manager.shared.result.Result;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,14 +12,13 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Component
-@RequiredArgsConstructor
-public class AcceptWorkspaceInvitationCommandHandler implements AcceptWorkspaceInvitationCommand {
+@AllArgsConstructor
+public class RejectWorkspaceInvitationCommandHandler implements RejectWorkspaceInvitationCommand {
     private final IWorkspaceInvitationRepository invitationRepository;
-    private final DomainEventPublisher domainEventPublisher;
 
     @Override
     @Transactional
-    public Result<UUID> execute(UUID id, UUID invitationId) {
+    public Result<?> execute(UUID id, UUID invitationId) {
         var result = invitationRepository.findById(invitationId);
 
         if (result.isEmpty())
@@ -29,7 +27,7 @@ public class AcceptWorkspaceInvitationCommandHandler implements AcceptWorkspaceI
         var invitation = result.get();
 
         if (!id.equals(invitation.getInvitedUserId()))
-            return Result.forbidden("You are not authorized to accept this invitation");
+            return Result.forbidden("You are not authorized to reject this invitation");
 
         if (invitation.getStatus() != WorkspaceInvitationStatus.PENDING)
             return Result.forbidden("Invitation already processed");
@@ -43,11 +41,9 @@ public class AcceptWorkspaceInvitationCommandHandler implements AcceptWorkspaceI
             return Result.forbidden("Invitation expired");
         }
 
-        invitation.accept();
+        invitation.rejected();
         invitationRepository.updateStatus(invitation);
 
-        domainEventPublisher.publishFrom(invitation);
-
-        return Result.success(invitation.getId(), "Invitation accepted");
+        return Result.success(null, "Invitation rejected");
     }
 }

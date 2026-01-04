@@ -52,4 +52,13 @@ public class TWorkspaceInvitation extends TGenericDomain {
     public void expired() {
         this.status = WorkspaceInvitationStatus.EXPIRED;
     }
+
+    public void rejected() {
+        this.status = WorkspaceInvitationStatus.REJECTED;
+        this.respondedAt = Instant.now();
+    }
+
+    public void cancel() {
+        this.status = WorkspaceInvitationStatus.CANCELED;
+    }
 }
