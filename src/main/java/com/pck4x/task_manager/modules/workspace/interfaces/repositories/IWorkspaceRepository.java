@@ -12,6 +12,7 @@ import java.util.UUID;
 
 public interface IWorkspaceRepository {
     TWorkspace create(TWorkspace workspace);
+    void delete(TWorkspace workspace);
     Optional<TWorkspace> getWorkspace(UUID id);
     Optional<WorkspaceDetailDto> getWorkspaceByIdAndOwnerId(UUID workspaceId, UUID ownerId);
     QueryResult<List<WorkspaceDto>> getAllWorkspaceByOwnerId(UUID ownerId, Pageable pageable);

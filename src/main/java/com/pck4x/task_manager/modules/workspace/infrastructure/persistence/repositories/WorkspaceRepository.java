@@ -36,6 +36,11 @@ public class WorkspaceRepository implements IWorkspaceRepository {
     }
 
     @Override
+    public void delete(TWorkspace workspace) {
+        jpa.delete(workspaceMapper.toEntity(workspace));
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Optional<TWorkspace> getWorkspace(UUID id) {
         return jpa.findById(id)

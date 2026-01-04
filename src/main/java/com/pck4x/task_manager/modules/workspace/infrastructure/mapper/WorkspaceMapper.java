@@ -6,22 +6,20 @@ import org.mapstruct.*;
 
 
 @Mapper(
-        componentModel = "spring",
-        uses = {WorkspaceMemberMapper.class}
+        componentModel = "spring"
 )
 public abstract class WorkspaceMapper {
-
-    @Mapping(target = "workspaceMember", source = "workspaceMember")
-    public abstract WorkspaceEntity toEntity(TWorkspace domain);
 
     @Mapping(target = "workspaceMember", ignore = true)
     public abstract TWorkspace toDomain(WorkspaceEntity entity);
 
+    public abstract WorkspaceEntity toEntity(TWorkspace domain);
+
     @AfterMapping
-    protected void linkMembers(@MappingTarget WorkspaceEntity entity) {
-        if (entity.getWorkspaceMember() != null) {
-            entity.getWorkspaceMember()
-                    .forEach(member -> member.setWorkspace(entity));
-        }
+    protected void linkMembers(
+            TWorkspace domain,
+            @MappingTarget WorkspaceEntity entity
+    ) {
+        entity.getWorkspaceMember().forEach(m -> m.setWorkspace(entity));
     }
 }

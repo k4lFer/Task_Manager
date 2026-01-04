@@ -36,10 +36,10 @@ public class SignInCommandHandler implements SignInCommand {
 
         SignInOutDto output = SignInOutDto.builder()
                 .id(user.getId())
+                .userName(user.getUsername())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
-
 
         return Result.success(output, "Login Successful");
     }

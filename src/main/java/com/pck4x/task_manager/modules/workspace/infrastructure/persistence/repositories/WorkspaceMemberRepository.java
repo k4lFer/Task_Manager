@@ -6,6 +6,7 @@ import com.pck4x.task_manager.modules.workspace.infrastructure.persistence.jpa.J
 import com.pck4x.task_manager.modules.workspace.interfaces.repositories.IWorkspaceMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -18,6 +19,7 @@ public class WorkspaceMemberRepository implements IWorkspaceMemberRepository {
     private final WorkspaceMemberMapper workspaceMemberMapper;
 
     @Override
+    @Transactional
     public TWorkspaceMembers save(TWorkspaceMembers workspaceMembers) {
         var entity = workspaceMemberMapper.toEntity(workspaceMembers);
         var saved = jpaWorkspaceMemberRepository.save(entity);

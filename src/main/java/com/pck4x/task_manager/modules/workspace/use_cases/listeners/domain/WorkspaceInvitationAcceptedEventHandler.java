@@ -6,6 +6,9 @@ import com.pck4x.task_manager.modules.workspace.interfaces.repositories.IWorkspa
 import com.pck4x.task_manager.modules.workspace.objects.enums.WorkspaceMemberRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
@@ -13,7 +16,8 @@ import org.springframework.transaction.event.TransactionalEventListener;
 public class WorkspaceInvitationAcceptedEventHandler {
     private final IWorkspaceMemberRepository memberRepository;
 
-    @TransactionalEventListener
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     void handle(WorkspaceInvitationAcceptedEvent event){
         var member = TWorkspaceMembers.create(
                 event.workspaceId(),

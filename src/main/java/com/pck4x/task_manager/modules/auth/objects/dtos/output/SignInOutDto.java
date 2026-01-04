@@ -10,6 +10,7 @@ import java.util.UUID;
 @Builder
 public class SignInOutDto {
     public UUID id;
+    public String userName;
     public String accessToken;
 
     @JsonIgnore

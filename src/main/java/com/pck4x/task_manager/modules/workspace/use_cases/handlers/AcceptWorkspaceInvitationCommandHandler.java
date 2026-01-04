@@ -5,9 +5,9 @@ import com.pck4x.task_manager.modules.workspace.objects.enums.WorkspaceInvitatio
 import com.pck4x.task_manager.modules.workspace.use_cases.command.AcceptWorkspaceInvitationCommand;
 import com.pck4x.task_manager.shared.application.adapter.DomainEventPublisher;
 import com.pck4x.task_manager.shared.result.Result;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.UUID;
