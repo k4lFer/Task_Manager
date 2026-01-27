@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,7 +51,7 @@ public class AuthCommandController {
     public ResponseEntity<?> Logout(HttpServletResponse response){
         cookieService.removeRefreshTokenCookie(response);
         return ResponseHelper.toResponse(
-                OutputPort.success(null, "Logout successful")
+                OutputPort.success(null, HttpStatus.OK, "Logout successful")
         );
     }
 
