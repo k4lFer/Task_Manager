@@ -2,8 +2,9 @@ package com.pck4x.task_manager.modules.workspace.use_cases.handlers;
 
 import com.pck4x.task_manager.modules.workspace.interfaces.repositories.IWorkspaceRepository;
 import com.pck4x.task_manager.modules.workspace.use_cases.command.DeleteWorkspaceCommand;
-import com.pck4x.task_manager.shared.result.Result;
+import com.pck4x.task_manager.shared.result.OutputPort;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -14,15 +15,15 @@ public class DeleteWorkspaceCommandHandler implements DeleteWorkspaceCommand {
     private final IWorkspaceRepository workspaceRepository;
 
     @Override
-    public Result<Void> execute(UUID userId, UUID workspaceId) {
+    public OutputPort<Void> execute(UUID userId, UUID workspaceId) {
         var workspace = workspaceRepository.getWorkspace(workspaceId);
-        if (workspace.isEmpty()) return Result.notFound("Workspace not found");
+        if (workspace.isEmpty()) return OutputPort.failure(HttpStatus.NOT_FOUND, "Workspace not found");
 
         if (workspace.get().getOwnerId().equals(userId)) {
             workspaceRepository.delete(workspace.get());
-            return Result.success(null, "Workspace deleted successfully");
+            return OutputPort.success(null, HttpStatus.OK, "Workspace deleted successfully");
         }
 
-        return Result.error("You are not the owner of this workspace");
+        return OutputPort.failure(HttpStatus.FORBIDDEN, "You are not the owner of this workspace");
     }
 }

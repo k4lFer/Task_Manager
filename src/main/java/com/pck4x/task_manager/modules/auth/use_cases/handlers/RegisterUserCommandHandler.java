@@ -1,15 +1,14 @@
 package com.pck4x.task_manager.modules.auth.use_cases.handlers;
 
-import com.pck4x.task_manager.modules.auth.domain.models.TPerson;
 import com.pck4x.task_manager.modules.auth.domain.models.TUser;
-import com.pck4x.task_manager.modules.auth.interfaces.repositories.IPersonRepository;
 import com.pck4x.task_manager.modules.auth.interfaces.repositories.IUserRepository;
 import com.pck4x.task_manager.modules.auth.objects.dtos.command.RegisterUserDto;
 import com.pck4x.task_manager.modules.auth.use_cases.command.RegisterUserCommand;
 import com.pck4x.task_manager.modules.auth.use_cases.event.UserCreatedEvent;
-import com.pck4x.task_manager.shared.result.Result;
+import com.pck4x.task_manager.shared.result.OutputPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +24,7 @@ public class RegisterUserCommandHandler implements RegisterUserCommand {
 
     @Override
     @Transactional
-    public Result<UUID> execute(RegisterUserDto input) {
+    public OutputPort<UUID> execute(RegisterUserDto input) {
         TUser user = TUser.create(
                 input.getFirstName(),
                 input.getLastName(),
@@ -44,10 +43,10 @@ public class RegisterUserCommandHandler implements RegisterUserCommand {
                             user.getCreatedAt()
                     )
             );
-            return Result.create(user.getId(), "User registered successfully");
+            return OutputPort.success(user.getId(), HttpStatus.CREATED,"User registered successfully");
         }
 
-        return Result.notFound("User not registered");
+        return OutputPort.failure(HttpStatus.BAD_REQUEST,"User not registered");
 
     }
 }

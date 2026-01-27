@@ -6,9 +6,10 @@ import com.pck4x.task_manager.modules.workspace.interfaces.repositories.IWorkspa
 import com.pck4x.task_manager.modules.workspace.objects.dtos.query.Response.CheckWorkspaceInvitationResponse;
 import com.pck4x.task_manager.modules.workspace.use_cases.query.SearchInvitableUsersQuery;
 import com.pck4x.task_manager.shared.interfaces.QueryResult;
-import com.pck4x.task_manager.shared.result.Result;
+import com.pck4x.task_manager.shared.result.OutputPort;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -22,11 +23,10 @@ public class SearchInvitableUsersQueryHandler implements SearchInvitableUsersQue
     private final IWorkspaceInvitationRepository invitationRepository;
 
     @Override
-    public Result<QueryResult<List<CheckWorkspaceInvitationResponse>>> execute(UUID workspaceId, String query, Pageable pageable) {
+    public OutputPort<QueryResult<List<CheckWorkspaceInvitationResponse>>> execute(UUID workspaceId, String query, Pageable pageable) {
         var users = userService.searchByEmailPrefix(query, pageable);
 
-        var mapped =
-                users.getResults().stream().map(user -> {
+        var mapped = users.getResults().stream().map(user -> {
 
                     boolean alreadyMember =
                             memberRepository
@@ -67,14 +67,14 @@ public class SearchInvitableUsersQueryHandler implements SearchInvitableUsersQue
                     );
                 }).toList();
 
-        if (mapped.isEmpty()) return Result.notFound("Users not found");
+        if (mapped.isEmpty()) return OutputPort.failure(HttpStatus.NOT_FOUND, "Users not found");
 
-        return Result.success(QueryResult.success(
+        return OutputPort.success(QueryResult.success(
                 mapped,
                 users.getTotalCounts(),
                 users.getTotalPages(),
                 users.getPageNumber(),
                 users.getPageSize()
-        ), "");
+        ), HttpStatus.OK, "Users are ready");
     }
 }

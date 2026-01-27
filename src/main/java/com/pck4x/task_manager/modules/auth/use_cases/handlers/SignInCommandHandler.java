@@ -5,8 +5,9 @@ import com.pck4x.task_manager.modules.auth.interfaces.services.IJwtService;
 import com.pck4x.task_manager.modules.auth.objects.dtos.command.SignInDto;
 import com.pck4x.task_manager.modules.auth.objects.dtos.output.SignInOutDto;
 import com.pck4x.task_manager.modules.auth.use_cases.command.SignInCommand;
-import com.pck4x.task_manager.shared.result.Result;
+import com.pck4x.task_manager.shared.result.OutputPort;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -18,17 +19,17 @@ public class SignInCommandHandler implements SignInCommand {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public Result<SignInOutDto> execute(SignInDto input) {
+    public OutputPort<SignInOutDto> execute(SignInDto input) {
         var userOptional = userRepository.findByUsername(input.getUsername());
 
         if (userOptional.isEmpty()) {
-            return Result.notFound("Invalid credentials");
+            return OutputPort.failure(HttpStatus.BAD_REQUEST, "Invalid credentials");
         }
 
         var user = userOptional.get();
 
         if (!passwordEncoder.matches(input.getPassword(), user.getPassword())) {
-            return Result.notFound("Invalid credentials");
+            return OutputPort.failure(HttpStatus.BAD_REQUEST, "Invalid credentials");
         }
 
         var accessToken = jwtService.generateAccessToken(user.getId());
@@ -41,6 +42,6 @@ public class SignInCommandHandler implements SignInCommand {
                 .refreshToken(refreshToken)
                 .build();
 
-        return Result.success(output, "Login Successful");
+        return OutputPort.success(output, HttpStatus.OK, "Login Successful");
     }
 }

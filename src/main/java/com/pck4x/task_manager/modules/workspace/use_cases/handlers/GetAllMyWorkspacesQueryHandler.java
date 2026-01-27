@@ -4,9 +4,10 @@ import com.pck4x.task_manager.modules.workspace.interfaces.repositories.IWorkspa
 import com.pck4x.task_manager.modules.workspace.objects.dtos.query.WorkspaceDto;
 import com.pck4x.task_manager.modules.workspace.use_cases.query.GetAllMyWorkspacesQuery;
 import com.pck4x.task_manager.shared.interfaces.QueryResult;
-import com.pck4x.task_manager.shared.result.Result;
+import com.pck4x.task_manager.shared.result.OutputPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -18,11 +19,11 @@ public class GetAllMyWorkspacesQueryHandler implements GetAllMyWorkspacesQuery {
     private final IWorkspaceRepository workspaceRepository;
 
     @Override
-    public Result<QueryResult<List<WorkspaceDto>>> execute(UUID id, Pageable pageable) {
+    public OutputPort<QueryResult<List<WorkspaceDto>>> execute(UUID id, Pageable pageable) {
         var result = workspaceRepository.getAllWorkspaceByOwnerId(id, pageable);
 
-        if (result.getResults().isEmpty()) return Result.noContent();
+        if (result.getResults().isEmpty()) return OutputPort.failure(HttpStatus.NO_CONTENT, null);
 
-        return Result.success(result, "Your workspaces are ready");
+        return OutputPort.success(result, HttpStatus.OK, "Your workspaces are ready");
     }
 }

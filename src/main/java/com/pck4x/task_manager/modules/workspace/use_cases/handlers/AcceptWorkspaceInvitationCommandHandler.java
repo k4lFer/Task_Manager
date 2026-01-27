@@ -4,8 +4,9 @@ import com.pck4x.task_manager.modules.workspace.interfaces.repositories.IWorkspa
 import com.pck4x.task_manager.modules.workspace.objects.enums.WorkspaceInvitationStatus;
 import com.pck4x.task_manager.modules.workspace.use_cases.command.AcceptWorkspaceInvitationCommand;
 import com.pck4x.task_manager.shared.application.adapter.DomainEventPublisher;
-import com.pck4x.task_manager.shared.result.Result;
+import com.pck4x.task_manager.shared.result.OutputPort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,19 +21,19 @@ public class AcceptWorkspaceInvitationCommandHandler implements AcceptWorkspaceI
 
     @Override
     @Transactional
-    public Result<UUID> execute(UUID id, UUID invitationId) {
+    public OutputPort<UUID> execute(UUID id, UUID invitationId) {
         var result = invitationRepository.findById(invitationId);
 
         if (result.isEmpty())
-            return Result.notFound("Invitation not found");
+            return OutputPort.failure(HttpStatus.NOT_FOUND, "Invitation not found");
 
         var invitation = result.get();
 
         if (!id.equals(invitation.getInvitedUserId()))
-            return Result.forbidden("You are not authorized to accept this invitation");
+            return OutputPort.failure(HttpStatus.FORBIDDEN, "You are not authorized to accept this invitation");
 
         if (invitation.getStatus() != WorkspaceInvitationStatus.PENDING)
-            return Result.forbidden("Invitation already processed");
+            return OutputPort.failure(HttpStatus.FORBIDDEN, "Invitation already processed");
 
         if (invitation.getExpiresAt() != null &&
                 invitation.getExpiresAt().isBefore(Instant.now())) {
@@ -40,7 +41,7 @@ public class AcceptWorkspaceInvitationCommandHandler implements AcceptWorkspaceI
             invitation.expired();
             invitationRepository.updateStatus(invitation);
 
-            return Result.forbidden("Invitation expired");
+            return OutputPort.failure(HttpStatus.FORBIDDEN, "Invitation expired");
         }
 
         invitation.accept();
@@ -48,6 +49,6 @@ public class AcceptWorkspaceInvitationCommandHandler implements AcceptWorkspaceI
 
         domainEventPublisher.publishFrom(invitation);
 
-        return Result.success(invitation.getId(), "Invitation accepted");
+        return OutputPort.success(invitation.getId(), HttpStatus.OK, "Invitation accepted");
     }
 }

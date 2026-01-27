@@ -6,8 +6,9 @@ import com.pck4x.task_manager.modules.chat.interfaces.repositories.IChatMessageR
 import com.pck4x.task_manager.modules.chat.objects.dtos.command.SendMessageDto;
 import com.pck4x.task_manager.modules.chat.use_cases.command.SendMessageCommand;
 import com.pck4x.task_manager.modules.chat.use_cases.events.MessageSentEvent;
-import com.pck4x.task_manager.shared.result.Result;
+import com.pck4x.task_manager.shared.result.OutputPort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -21,16 +22,16 @@ public class SendMessageCommandHandler implements SendMessageCommand {
     private final org.springframework.context.ApplicationEventPublisher eventPublisher;
 
     @Override
-    public Result execute(UUID sendId, SendMessageDto input) {
+    public OutputPort execute(UUID sendId, SendMessageDto input) {
         var channel = chatChannelRepository.findById(input.getChatChannelId())
                 .orElse(null);
 
         if (channel == null)
-            return Result.notFound("Channel not found");
+            return OutputPort.failure(HttpStatus.NOT_FOUND, "Channel not found");
 
         var member = workspaceMemberRepository.findByWorkspaceIdAndMemberId(channel.getWorkspaceId(), sendId);
         if (member.isEmpty())
-            return Result.forbidden("You are not a member of this workspace");
+            return OutputPort.failure(HttpStatus.FORBIDDEN, "You are not a member of this workspace");
 
         var chatMessage = TChatMessage.create(
                 input.getChatChannelId(),
@@ -46,6 +47,6 @@ public class SendMessageCommandHandler implements SendMessageCommand {
                 sendId,
                 chatMessage.getSentAt()));
 
-        return Result.success(null, "Message sent");
+        return OutputPort.success(null, HttpStatus.OK, "Message sent");
     }
 }

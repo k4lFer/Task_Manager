@@ -5,9 +5,10 @@ import com.pck4x.task_manager.modules.workspace.objects.dtos.query.Response.GetS
 import com.pck4x.task_manager.modules.workspace.objects.enums.WorkspaceInvitationStatus;
 import com.pck4x.task_manager.modules.workspace.use_cases.query.GetSentInvitationsQuery;
 import com.pck4x.task_manager.shared.interfaces.QueryResult;
-import com.pck4x.task_manager.shared.result.Result;
+import com.pck4x.task_manager.shared.result.OutputPort;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -19,11 +20,11 @@ public class GetSentInvitationsQueryHandler implements GetSentInvitationsQuery {
     private final IWorkspaceInvitationRepository invitationRepository;
 
     @Override
-    public Result<QueryResult<List<GetSentInvitationsResponse>>> execute(UUID userId, Pageable pageable, WorkspaceInvitationStatus status) {
+    public OutputPort<QueryResult<List<GetSentInvitationsResponse>>> execute(UUID userId, Pageable pageable, WorkspaceInvitationStatus status) {
         var result = invitationRepository.GetSentInvitations(userId, pageable, status);
 
-        if (result.getResults().isEmpty()) return Result.noContent();
+        if (result.getResults().isEmpty()) return OutputPort.failure(HttpStatus.NO_CONTENT, null);
 
-        return Result.success(result, "Your invitations are ready");
+        return OutputPort.success(result, HttpStatus.OK, "Your invitations are ready");
     }
 }

@@ -7,8 +7,9 @@ import com.pck4x.task_manager.modules.workspace.objects.dtos.command.CreateWorks
 import com.pck4x.task_manager.modules.workspace.objects.enums.WorkspaceMemberRole;
 import com.pck4x.task_manager.modules.workspace.use_cases.command.CreateWorkspaceCommand;
 import com.pck4x.task_manager.shared.interfaces.IInputPortValidator;
-import com.pck4x.task_manager.shared.result.Result;
+import com.pck4x.task_manager.shared.result.OutputPort;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -20,8 +21,8 @@ public class CreateWorkspaceCommandHandler implements CreateWorkspaceCommand {
     private final IWorkspaceRepository workspaceRepository;
     private final IInputPortValidator<CreateWorkspaceDto> validator;
     @Override
-    public Result<UUID> execute(UUID userId, CreateWorkspaceDto input) {
-        if (!validator.Validate(input)) return Result.fail(validator.getHttpStatusCode(), validator.getMessage());
+    public OutputPort<UUID> execute(UUID userId, CreateWorkspaceDto input) {
+        if (!validator.Validate(input)) return OutputPort.failures(validator.getHttpStatusCode(), validator.getMessage());
 
 
         var workspace = TWorkspace.create(
@@ -40,8 +41,8 @@ public class CreateWorkspaceCommandHandler implements CreateWorkspaceCommand {
         workspace.attachWorkspace(workspaceMember);
 
         var saved = workspaceRepository.create(workspace);
-        if (saved != null) return Result.success(saved.getId(), "Workspace created successfully");
+        if (saved != null) return OutputPort.success(saved.getId(), HttpStatus.CREATED, "Workspace created successfully");
 
-        return Result.exception("Unable to create workspace");
+        return OutputPort.failure(HttpStatus.BAD_REQUEST, "Unable to create workspace");
     }
 }

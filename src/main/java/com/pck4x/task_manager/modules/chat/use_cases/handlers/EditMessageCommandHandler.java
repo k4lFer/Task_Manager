@@ -4,9 +4,10 @@ import com.pck4x.task_manager.modules.chat.interfaces.repositories.IChatMessageR
 import com.pck4x.task_manager.modules.chat.objects.dtos.command.EditMessageDto;
 import com.pck4x.task_manager.modules.chat.use_cases.command.EditMessageCommand;
 import com.pck4x.task_manager.modules.chat.use_cases.events.MessageEditedEvent;
-import com.pck4x.task_manager.shared.result.Result;
+import com.pck4x.task_manager.shared.result.OutputPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -18,16 +19,16 @@ public class EditMessageCommandHandler implements EditMessageCommand {
     private final ApplicationEventPublisher eventPublisher;
 
     @Override
-    public Result<?> execute(UUID editorId, EditMessageDto input) {
+    public OutputPort<?> execute(UUID editorId, EditMessageDto input) {
         var message = chatMessageRepository.findById(input.getMessageId())
                 .orElse(null);
 
         if (message == null) {
-            return Result.notFound("Message not found");
+            return OutputPort.failure(HttpStatus.NOT_FOUND, "Message not found");
         }
 
         if (!message.getUserId().equals(editorId)) {
-            return Result.forbidden("You can only edit your own messages");
+            return OutputPort.failure(HttpStatus.FORBIDDEN, "You can only edit your own messages");
         }
 
         message.edit(input.getNewMessage());
@@ -40,6 +41,6 @@ public class EditMessageCommandHandler implements EditMessageCommand {
                 editorId,
                 message.getEditedAt()));
 
-        return Result.success(null, "Message edited");
+        return OutputPort.success(null, HttpStatus.OK,"Message edited");
     }
 }

@@ -13,5 +13,5 @@ import java.util.List;
 @AllArgsConstructor
 public class MessageDto {
     private String type;
-    private List<String> messages;
+    private String messages;
 }

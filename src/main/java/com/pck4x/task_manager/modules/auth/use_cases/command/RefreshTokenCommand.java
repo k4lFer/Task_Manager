@@ -1,7 +1,7 @@
 package com.pck4x.task_manager.modules.auth.use_cases.command;
 
-import com.pck4x.task_manager.shared.result.Result;
+import com.pck4x.task_manager.shared.result.OutputPort;
 
 public interface RefreshTokenCommand {
-    Result<String> execute(String input);
+    OutputPort<String> execute(String input);
 }

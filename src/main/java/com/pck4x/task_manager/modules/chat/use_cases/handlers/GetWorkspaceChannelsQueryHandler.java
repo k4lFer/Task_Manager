@@ -4,9 +4,10 @@ import com.pck4x.task_manager.modules.chat.interfaces.repositories.IChatChannelR
 import com.pck4x.task_manager.modules.chat.objects.dtos.query.WorkspaceChannelDto;
 import com.pck4x.task_manager.modules.chat.use_cases.query.GetWorkspaceChannelsQuery;
 import com.pck4x.task_manager.shared.interfaces.QueryResult;
-import com.pck4x.task_manager.shared.result.Result;
+import com.pck4x.task_manager.shared.result.OutputPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -18,12 +19,12 @@ public class GetWorkspaceChannelsQueryHandler implements GetWorkspaceChannelsQue
     private final IChatChannelRepository chatChannelRepository;
 
     @Override
-    public Result<QueryResult<List<WorkspaceChannelDto>>> execute(UUID workspaceId, Pageable pageable) {
+    public OutputPort<QueryResult<List<WorkspaceChannelDto>>> execute(UUID workspaceId, Pageable pageable) {
         var result = chatChannelRepository.getChannelsByWorkspaceId(workspaceId, pageable);
 
-        if (result.getResults().isEmpty()) return Result.noContent();
+        if (result.getResults().isEmpty()) return OutputPort.success(null, HttpStatus.NO_CONTENT, null);
 
-        return Result.success(result, "Channels are ready");
+        return OutputPort.success(result, HttpStatus.OK,"Channels are ready");
 
     }
 }

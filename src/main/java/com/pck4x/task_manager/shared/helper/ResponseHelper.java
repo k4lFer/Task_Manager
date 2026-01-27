@@ -1,13 +1,11 @@
 package com.pck4x.task_manager.shared.helper;
 
-import com.pck4x.task_manager.shared.result.Result;
+import com.pck4x.task_manager.shared.result.OutputPort;
 import org.springframework.http.ResponseEntity;
-
-import java.net.URI;
 
 public class ResponseHelper {
 
-    public static <T> ResponseEntity<ApiResponse<T>> toResponse(Result<T> result) {
+    public static <T> ResponseEntity<ApiResponse<T>> toResponse(OutputPort<T> result) {
 
         int status = result.getStatus().value();
 

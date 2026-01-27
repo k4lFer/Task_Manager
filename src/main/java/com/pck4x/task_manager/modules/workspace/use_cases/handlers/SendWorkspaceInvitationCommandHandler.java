@@ -8,8 +8,9 @@ import com.pck4x.task_manager.modules.workspace.interfaces.services.IWorkspaceAc
 import com.pck4x.task_manager.modules.workspace.objects.dtos.command.SendWorkspaceInvitationDto;
 import com.pck4x.task_manager.modules.workspace.objects.enums.WorkspaceInvitationRole;
 import com.pck4x.task_manager.modules.workspace.use_cases.command.SendWorkspaceInvitationCommand;
-import com.pck4x.task_manager.shared.result.Result;
+import com.pck4x.task_manager.shared.result.OutputPort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -23,21 +24,19 @@ public class SendWorkspaceInvitationCommandHandler implements SendWorkspaceInvit
     private final IUserService userService;
 
     @Override
-    public Result<UUID> execute(UUID invitedBy, SendWorkspaceInvitationDto input) {
+    public OutputPort<UUID> execute(UUID invitedBy, SendWorkspaceInvitationDto input) {
         var user = userService.getUserByExactEmail(input.getEmail());
 
-        if(user.isEmpty()) return Result.notFound("User not found");
+        if(user.isEmpty()) return OutputPort.failure(HttpStatus.NOT_FOUND, "User not found");
 
         if (!workspaceAccessService.isAdminOrOwner(input.getWorkspaceId(), invitedBy)) {
-            return Result.forbidden("Only Workspace Owner or Admins can add members");
+            return OutputPort.failure(HttpStatus.FORBIDDEN, "Only Workspace Owner or Admins can add members");
         }
 
         boolean isInviterOwner = workspaceAccessService.isOwner(input.getWorkspaceId(), invitedBy);
 
         if (input.getRole() == WorkspaceInvitationRole.ADMIN && !isInviterOwner) {
-            return Result.forbidden(
-                    "Only Workspace Owner can invite an ADMIN"
-            );
+            return OutputPort.failure(HttpStatus.FORBIDDEN, "Only Workspace Owner can invite an ADMIN");
         }
 
         if (workspaceInvitationRepository.existsPending(
@@ -45,13 +44,13 @@ public class SendWorkspaceInvitationCommandHandler implements SendWorkspaceInvit
                 user.get().id(),
                 user.get().email()
         )) {
-            return Result.forbidden("There is already a pending invitation for this user");
+            return OutputPort.failure(HttpStatus.FORBIDDEN, "There is already a pending invitation for this user");
         }
 
         var member = workspaceMemberRepository.findByWorkspaceIdAndMemberId(input.getWorkspaceId(), user.get().id());
 
         if(member.isPresent()){
-            return Result.forbidden("User is already a member of this workspace");
+            return OutputPort.failure(HttpStatus.FORBIDDEN, "User is already a member of this workspace");
         }
 
         var invitation = TWorkspaceInvitation.create(
@@ -64,8 +63,8 @@ public class SendWorkspaceInvitationCommandHandler implements SendWorkspaceInvit
 
         var saved = workspaceInvitationRepository.save(invitation);
 
-        if (saved != null) return Result.success(saved.getId(), "Invitation sent successfully");
+        if (saved != null) return OutputPort.success(saved.getId(), HttpStatus.CREATED, "Invitation sent successfully");
 
-        return Result.error("Something went wrong");
+        return OutputPort.failure(HttpStatus.BAD_REQUEST, "Something went wrong");
     }
 }

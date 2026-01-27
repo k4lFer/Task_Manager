@@ -7,7 +7,7 @@ import com.pck4x.task_manager.modules.auth.use_cases.command.RefreshTokenCommand
 import com.pck4x.task_manager.modules.auth.use_cases.command.RegisterUserCommand;
 import com.pck4x.task_manager.modules.auth.use_cases.command.SignInCommand;
 import com.pck4x.task_manager.shared.helper.ResponseHelper;
-import com.pck4x.task_manager.shared.result.Result;
+import com.pck4x.task_manager.shared.result.OutputPort;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
@@ -50,7 +50,7 @@ public class AuthCommandController {
     public ResponseEntity<?> Logout(HttpServletResponse response){
         cookieService.removeRefreshTokenCookie(response);
         return ResponseHelper.toResponse(
-                Result.success(null, "Logout successful")
+                OutputPort.success(null, "Logout successful")
         );
     }
 
