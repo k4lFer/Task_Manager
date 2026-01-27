@@ -20,7 +20,7 @@ public class TPerson {
 
     private TUser user;
 
-    public static TPerson create(String firstName, String lastName, LocalDate birthDate) {
+    static TPerson create(String firstName, String lastName, LocalDate birthDate) {
         return TPerson.builder()
                 .id(UUID.randomUUID())
                 .firstName(firstName)
@@ -31,7 +31,7 @@ public class TPerson {
                 .build();
     }
 
-    public void attachUser(TUser user) {
+    void attachUser(TUser user) {
         this.user = user;
         this.updatedAt = Instant.now();
     }

@@ -6,6 +6,5 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface IPersonRepository {
-    TPerson save(TPerson person);
     Optional<TPerson> findById(UUID id);
 }

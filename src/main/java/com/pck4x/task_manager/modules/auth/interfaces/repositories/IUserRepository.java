@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface IUserRepository {
+    TUser save(TUser user);
     Optional<TUser> findById(UUID id);
     Optional<TUser> findByUsername(String username);
     Optional<TUser> findByEmail(String email);

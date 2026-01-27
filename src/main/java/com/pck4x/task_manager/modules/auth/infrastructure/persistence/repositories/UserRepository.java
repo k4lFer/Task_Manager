@@ -1,6 +1,7 @@
 package com.pck4x.task_manager.modules.auth.infrastructure.persistence.repositories;
 
 import com.pck4x.task_manager.modules.auth.domain.models.TUser;
+import com.pck4x.task_manager.modules.auth.infrastructure.entities.UserEntity;
 import com.pck4x.task_manager.modules.auth.infrastructure.mapper.UserMapper;
 import com.pck4x.task_manager.modules.auth.infrastructure.persistence.jpa.JpaUserRepository;
 import com.pck4x.task_manager.modules.auth.interfaces.repositories.IUserRepository;
@@ -14,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.print.PageFormat;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,6 +25,17 @@ import java.util.UUID;
 public class UserRepository implements IUserRepository {
     private final UserMapper mapper;
     private final JpaUserRepository jpa;
+
+    @Override
+    public TUser save(TUser user) {
+        UserEntity entity = mapper.toEntity(user);
+
+        entity.getPerson().setUser(entity);
+
+        UserEntity saved = jpa.save(entity);
+
+        return mapper.toDomain(saved);
+    }
 
     @Override
     public Optional<TUser> findById(UUID id) {

@@ -3,6 +3,7 @@ package com.pck4x.task_manager.modules.auth.use_cases.handlers;
 import com.pck4x.task_manager.modules.auth.domain.models.TPerson;
 import com.pck4x.task_manager.modules.auth.domain.models.TUser;
 import com.pck4x.task_manager.modules.auth.interfaces.repositories.IPersonRepository;
+import com.pck4x.task_manager.modules.auth.interfaces.repositories.IUserRepository;
 import com.pck4x.task_manager.modules.auth.objects.dtos.command.RegisterUserDto;
 import com.pck4x.task_manager.modules.auth.use_cases.command.RegisterUserCommand;
 import com.pck4x.task_manager.modules.auth.use_cases.event.UserCreatedEvent;
@@ -18,24 +19,23 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 public class RegisterUserCommandHandler implements RegisterUserCommand {
-    private final IPersonRepository personRepository;
+    private final IUserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional
     public Result<UUID> execute(RegisterUserDto input) {
-        TPerson person = TPerson.create(input.getFirstName(), input.getLastName(), input.getBirthDate());
-
         TUser user = TUser.create(
-                person.getId(),
+                input.getFirstName(),
+                input.getLastName(),
+                input.getBirthDate(),
                 input.getUsername(),
                 input.getEmail(),
                 passwordEncoder.encode(input.getPassword())
         );
-        person.attachUser(user);
 
-        var saved = personRepository.save(person);
+        var saved = userRepository.save(user);
 
         if (saved != null) {
             eventPublisher.publishEvent(
