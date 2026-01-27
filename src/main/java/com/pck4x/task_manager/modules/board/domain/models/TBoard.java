@@ -3,7 +3,31 @@ package com.pck4x.task_manager.modules.board.domain.models;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.Instant;
+import java.util.UUID;
+
 @Getter
 @Builder
 public class TBoard {
+    private UUID id;
+    private UUID workspaceId;
+    private UUID ownerId;
+    private String name;
+    private String description;
+    private Boolean isPrivate;
+    private Instant createdAt;
+    private Instant updatedAt;
+
+    public static TBoard create(UUID workspaceId, UUID ownerId, String name, String description, Boolean isPrivate) {
+        return TBoard.builder()
+                .id(UUID.randomUUID())
+                .workspaceId(workspaceId)
+                .ownerId(ownerId)
+                .name(name)
+                .description(description)
+                .isPrivate(isPrivate)
+                .build();
+    }
+
+
 }
