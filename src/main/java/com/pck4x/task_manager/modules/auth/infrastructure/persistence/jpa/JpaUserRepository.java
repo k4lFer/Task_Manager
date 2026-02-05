@@ -36,7 +36,7 @@ public interface JpaUserRepository extends JpaRepository<UserEntity, UUID> {
             u.person.lastName
         )
         FROM UserEntity u
-        WHERE LOWER(u.email) LIKE LOWER(CONCAT(:emailPrefix, '%'))
+        WHERE LOWER(u.email) LIKE LOWER(CONCAT('%', :emailPrefix, '%'))
     """)
     Page<UserInfoOutDto> searchByEmailPrefix(
             @Param("emailPrefix") String emailPrefix,

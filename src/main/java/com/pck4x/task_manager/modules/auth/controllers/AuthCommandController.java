@@ -40,7 +40,7 @@ public class AuthCommandController {
         if (result.isSuccess() && result.getData() != null) {
             cookieService.setRefreshTokenCookie(
                     response,
-                    result.getData().getRefreshToken()
+                    result.getData().refreshToken()
             );
         }
         return ResponseHelper.toResponse(result);

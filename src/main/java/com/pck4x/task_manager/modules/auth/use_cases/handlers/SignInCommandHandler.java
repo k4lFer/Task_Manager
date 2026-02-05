@@ -35,13 +35,14 @@ public class SignInCommandHandler implements SignInCommand {
         var accessToken = jwtService.generateAccessToken(user.getId());
         var refreshToken = jwtService.generateRefreshToken(user.getId());
 
-        SignInOutDto output = SignInOutDto.builder()
-                .id(user.getId())
-                .userName(user.getUsername())
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
-
+        SignInOutDto output = new SignInOutDto(
+                user.getId(),
+                user.getUsername(),
+                user.getPerson().getFirstName(),
+                user.getPerson().getLastName(),
+                accessToken,
+                refreshToken
+        );
         return OutputPort.success(output, HttpStatus.OK, "Login Successful");
     }
 }
