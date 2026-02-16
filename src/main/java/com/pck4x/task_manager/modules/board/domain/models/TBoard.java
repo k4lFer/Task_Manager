@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -18,6 +19,9 @@ public class TBoard {
     private Instant createdAt;
     private Instant updatedAt;
 
+    @Builder.Default
+    private List<TBoardMembers> boardMembers = new java.util.ArrayList<>();
+
     public static TBoard create(UUID workspaceId, UUID ownerId, String name, String description, Boolean isPrivate) {
         return TBoard.builder()
                 .id(UUID.randomUUID())
@@ -30,4 +34,7 @@ public class TBoard {
     }
 
 
+    public void attachBoard(TBoardMembers boardMember) {
+        this.boardMembers.add(boardMember);
+    }
 }

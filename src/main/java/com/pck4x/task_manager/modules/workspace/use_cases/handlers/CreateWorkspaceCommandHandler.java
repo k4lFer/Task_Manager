@@ -20,10 +20,10 @@ import java.util.UUID;
 public class CreateWorkspaceCommandHandler implements CreateWorkspaceCommand {
     private final IWorkspaceRepository workspaceRepository;
     private final IInputPortValidator<CreateWorkspaceDto> validator;
+
     @Override
     public OutputPort<UUID> execute(UUID userId, CreateWorkspaceDto input) {
         if (!validator.Validate(input)) return OutputPort.failures(validator.getHttpStatusCode(), validator.getMessage());
-
 
         var workspace = TWorkspace.create(
                 userId,

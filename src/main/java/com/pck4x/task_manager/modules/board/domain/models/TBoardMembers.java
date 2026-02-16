@@ -16,7 +16,7 @@ public class TBoardMembers {
     private BoardMemberRole role;
     private Instant createdAt;
 
-    private static TBoardMembers create(UUID boardId, UUID memberId, BoardMemberRole role) {
+    public static TBoardMembers create(UUID boardId, UUID memberId, BoardMemberRole role) {
         return TBoardMembers.builder()
                 .id(UUID.randomUUID())
                 .boardId(boardId)

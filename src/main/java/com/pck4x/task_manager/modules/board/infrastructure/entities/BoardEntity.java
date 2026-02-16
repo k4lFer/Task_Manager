@@ -44,7 +44,7 @@ public class BoardEntity {
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     @Fetch(FetchMode.SUBSELECT)
-    private List<BoardMemberEntity> boardMember = new ArrayList<>();
+    private List<BoardMemberEntity> boardMembers = new ArrayList<>();
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     @Fetch(FetchMode.SUBSELECT)
