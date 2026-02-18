@@ -29,4 +29,7 @@ public class LabelEntity {
 
     @Column(name = "created_at", columnDefinition = "timestamptz")
     private Instant createdAt;
+
+    @Column(name = "updated_at", columnDefinition = "timestamptz", nullable = true)
+    private Instant updatedAt;
 }

@@ -1,7 +1,5 @@
 package com.pck4x.task_manager.modules.workspace.objects.dtos.query;
 
-import lombok.Data;
-
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;

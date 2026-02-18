@@ -15,4 +15,15 @@ public class TList {
     private Integer position;
     private Instant createdAt;
     private Instant updatedAt;
+
+    public static TList create(UUID boardId, String name, Integer position) {
+        return TList.builder()
+                .id(UUID.randomUUID())
+                .boardId(boardId)
+                .name(name)
+                .position(position)
+                .createdAt(Instant.now())
+                .updatedAt(null)
+                .build();
+    }
 }

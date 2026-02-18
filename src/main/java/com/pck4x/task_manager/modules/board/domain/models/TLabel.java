@@ -14,5 +14,17 @@ public class TLabel {
     private String color;
     private UUID boardId;
     private Instant createdAt;
+    private Instant updatedAt;
+
+    public static TLabel create(String name, String color, UUID boardId) {
+        return TLabel.builder()
+                .id(UUID.randomUUID())
+                .name(name)
+                .color(color)
+                .boardId(boardId)
+                .createdAt(Instant.now())
+                .updatedAt(null)
+                .build();
+    }
 
 }

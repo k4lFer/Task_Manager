@@ -1,5 +1,7 @@
 package com.pck4x.task_manager.modules.board.domain.models;
 
+import com.pck4x.task_manager.modules.board.domain.events.BoardCreatedEvent;
+import com.pck4x.task_manager.shared.domain.repository.TGenericDomain;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -9,7 +11,7 @@ import java.util.UUID;
 
 @Getter
 @Builder
-public class TBoard {
+public class TBoard extends TGenericDomain {
     private UUID id;
     private UUID workspaceId;
     private UUID ownerId;
@@ -36,5 +38,6 @@ public class TBoard {
 
     public void attachBoard(TBoardMembers boardMember) {
         this.boardMembers.add(boardMember);
+        domainEvents.add(new BoardCreatedEvent(this.id));
     }
 }

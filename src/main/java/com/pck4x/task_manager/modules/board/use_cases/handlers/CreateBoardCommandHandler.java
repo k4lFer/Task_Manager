@@ -6,6 +6,7 @@ import com.pck4x.task_manager.modules.board.interfaces.repositories.IBoardReposi
 import com.pck4x.task_manager.modules.board.objects.dtos.command.CreateBoardDto;
 import com.pck4x.task_manager.modules.board.objects.enums.BoardMemberRole;
 import com.pck4x.task_manager.modules.board.use_cases.command.CreateBoardCommand;
+import com.pck4x.task_manager.shared.application.adapter.DomainEventPublisher;
 import com.pck4x.task_manager.shared.result.OutputPort;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class CreateBoardCommandHandler implements CreateBoardCommand {
     private final IBoardRepository boardRepository;
+    private final DomainEventPublisher domainEventPublisher;
 
     @Override
     public OutputPort<UUID> execute(UUID userId, UUID workspaceId, CreateBoardDto input) {
@@ -39,10 +41,8 @@ public class CreateBoardCommandHandler implements CreateBoardCommand {
 
         var saved = boardRepository.save(board);
         if (saved == null)  return OutputPort.failure(HttpStatus.BAD_REQUEST, "Unable to create board");
-        /*
-        * disparar evento
-        *
-        * */
+
+        // domainEventPublisher.publishFrom(board);
 
         return OutputPort.success(saved.getId(), HttpStatus.CREATED, "Board created successfully");
 
