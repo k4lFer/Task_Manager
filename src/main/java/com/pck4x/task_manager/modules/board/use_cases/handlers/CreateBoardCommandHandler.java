@@ -42,7 +42,7 @@ public class CreateBoardCommandHandler implements CreateBoardCommand {
         var saved = boardRepository.save(board);
         if (saved == null)  return OutputPort.failure(HttpStatus.BAD_REQUEST, "Unable to create board");
 
-        // domainEventPublisher.publishFrom(board);
+        domainEventPublisher.publishFrom(board);
 
         return OutputPort.success(saved.getId(), HttpStatus.CREATED, "Board created successfully");
 

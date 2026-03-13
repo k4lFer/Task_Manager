@@ -49,4 +49,10 @@ public class WorkspaceAccessService implements IWorkspaceAccessService {
     public boolean isAdminOrOwner(UUID workspaceId, UUID userId) {
         return isOwner(workspaceId, userId) || isAdmin(workspaceId, userId);
     }
+
+    @Override
+    public boolean isExists(UUID workspaceId, UUID userId) {
+        return workspaceMemberRepository.findByWorkspaceIdAndMemberId(workspaceId, userId)
+                .isPresent();
+    }
 }

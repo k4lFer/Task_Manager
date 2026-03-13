@@ -15,4 +15,5 @@ public interface IWorkspaceAccessService {
      * Checks if the user is either the Owner OR has the ADMIN role.
      */
     boolean isAdminOrOwner(UUID workspaceId, UUID userId);
+    boolean isExists(UUID workspaceId, UUID userId);
 }

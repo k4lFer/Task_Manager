@@ -25,6 +25,6 @@ public class BoardCreatedEventHandler {
                 TList.create(event.id(), "In progress",2),
                 TList.create(event.id(), "Done",3)
         );
-        listRepository.savAll(lists);
+        listRepository.saveAll(lists);
     }
 }

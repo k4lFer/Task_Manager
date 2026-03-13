@@ -17,7 +17,7 @@ public class ListRepository implements IListRepository {
     private final ListMapper mapper;
 
     @Override
-    public void savAll(List<TList> lists) {
+    public void saveAll(List<TList> lists) {
         List<ListEntity> entities = mapper.toEntityList(lists);
 
         jpa.saveAll(entities);
