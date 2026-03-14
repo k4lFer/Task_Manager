@@ -5,6 +5,6 @@ import com.pck4x.task_manager.shared.result.OutputPort;
 
 import java.util.UUID;
 
-public interface CreateChatChannelCommand {
+public interface CreateChannelCommand {
     OutputPort<UUID> execute(UUID ownerId, CreateChatChannelDto input);
 }

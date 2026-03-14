@@ -15,7 +15,7 @@ import java.util.UUID;
 @Builder
 @Getter
 @Setter
-public class ChatChannelEntity {
+public class ChannelEntity {
     @Id
     private UUID id;
 

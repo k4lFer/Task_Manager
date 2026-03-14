@@ -8,15 +8,15 @@ import java.util.UUID;
 
 @Getter
 @Builder
-public class TChatChannel {
+public class TChannel {
     private UUID id;
     private UUID workspaceId;
     private String name;
     private String description;
     private Instant createdAt;
 
-    public static TChatChannel create(UUID workspaceId, String name, String description) {
-        return TChatChannel.builder()
+    public static TChannel create(UUID workspaceId, String name, String description) {
+        return TChannel.builder()
                 .id(UUID.randomUUID())
                 .workspaceId(workspaceId)
                 .name(name)

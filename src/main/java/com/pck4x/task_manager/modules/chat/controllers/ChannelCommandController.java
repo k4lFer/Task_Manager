@@ -2,7 +2,7 @@ package com.pck4x.task_manager.modules.chat.controllers;
 
 import com.pck4x.task_manager.modules.chat.objects.dtos.command.CreateChatChannelDto;
 import com.pck4x.task_manager.modules.chat.objects.dtos.command.SendMessageDto;
-import com.pck4x.task_manager.modules.chat.use_cases.command.CreateChatChannelCommand;
+import com.pck4x.task_manager.modules.chat.use_cases.command.CreateChannelCommand;
 import com.pck4x.task_manager.modules.chat.use_cases.command.EditMessageCommand;
 import com.pck4x.task_manager.modules.chat.use_cases.command.SendMessageCommand;
 import com.pck4x.task_manager.shared.helper.ResponseHelper;
@@ -25,8 +25,8 @@ import java.util.UUID;
 @Tag(name = "Chat")
 @SecurityRequirement(name = "bearerAuth")
 @AllArgsConstructor
-public class ChatChannelCommandController {
-    private final CreateChatChannelCommand createChatChannelCommand;
+public class ChannelCommandController {
+    private final CreateChannelCommand createChannelCommand;
     private final SendMessageCommand sendMessageCommand;
     private final EditMessageCommand editMessageCommand;
 
@@ -35,7 +35,7 @@ public class ChatChannelCommandController {
     public ResponseEntity<?> Create(
             @Parameter(hidden = true) @AuthenticationPrincipal String userId,
             @RequestBody CreateChatChannelDto input) {
-        var result = createChatChannelCommand.execute(UUID.fromString(userId), input);
+        var result = createChannelCommand.execute(UUID.fromString(userId), input);
         return ResponseHelper.toResponse(result);
     }
 

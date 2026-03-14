@@ -1,7 +1,7 @@
 package com.pck4x.task_manager.modules.chat.use_cases.handlers;
 
 import com.pck4x.task_manager.modules.chat.domain.models.TChatMessage;
-import com.pck4x.task_manager.modules.chat.interfaces.repositories.IChatChannelRepository;
+import com.pck4x.task_manager.modules.chat.interfaces.repositories.IChannelRepository;
 import com.pck4x.task_manager.modules.chat.interfaces.repositories.IChatMessageRepository;
 import com.pck4x.task_manager.modules.chat.objects.dtos.command.SendMessageDto;
 import com.pck4x.task_manager.modules.chat.use_cases.command.SendMessageCommand;
@@ -16,7 +16,7 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 public class SendMessageCommandHandler implements SendMessageCommand {
-    private final IChatChannelRepository chatChannelRepository;
+    private final IChannelRepository chatChannelRepository;
     private final IChatMessageRepository chatMessageRepository;
     private final com.pck4x.task_manager.modules.workspace.interfaces.repositories.IWorkspaceMemberRepository workspaceMemberRepository;
     private final org.springframework.context.ApplicationEventPublisher eventPublisher;

@@ -1,6 +1,6 @@
 package com.pck4x.task_manager.modules.chat.use_cases.handlers;
 
-import com.pck4x.task_manager.modules.chat.interfaces.repositories.IChatChannelRepository;
+import com.pck4x.task_manager.modules.chat.interfaces.repositories.IChannelRepository;
 import com.pck4x.task_manager.modules.chat.objects.dtos.query.WorkspaceChannelDto;
 import com.pck4x.task_manager.modules.chat.use_cases.query.GetWorkspaceChannelsQuery;
 import com.pck4x.task_manager.shared.interfaces.QueryResult;
@@ -16,7 +16,7 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 public class GetWorkspaceChannelsQueryHandler implements GetWorkspaceChannelsQuery {
-    private final IChatChannelRepository chatChannelRepository;
+    private final IChannelRepository chatChannelRepository;
 
     @Override
     public OutputPort<QueryResult<List<WorkspaceChannelDto>>> execute(UUID workspaceId, Pageable pageable) {

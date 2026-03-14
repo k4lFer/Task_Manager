@@ -22,7 +22,7 @@ public class ChatMessageEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chat_channel_id", nullable = false)
-    private ChatChannelEntity chatChannel;
+    private ChannelEntity chatChannel;
 
     @Column(name = "user_id", nullable = false)
     private UUID userId;

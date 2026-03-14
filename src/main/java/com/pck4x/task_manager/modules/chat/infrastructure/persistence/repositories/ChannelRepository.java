@@ -1,10 +1,10 @@
 package com.pck4x.task_manager.modules.chat.infrastructure.persistence.repositories;
 
-import com.pck4x.task_manager.modules.chat.domain.models.TChatChannel;
-import com.pck4x.task_manager.modules.chat.infrastructure.entities.ChatChannelEntity;
-import com.pck4x.task_manager.modules.chat.infrastructure.mapper.ChatChannelMapper;
-import com.pck4x.task_manager.modules.chat.infrastructure.persistence.jpa.JpaChatChannelRepository;
-import com.pck4x.task_manager.modules.chat.interfaces.repositories.IChatChannelRepository;
+import com.pck4x.task_manager.modules.chat.domain.models.TChannel;
+import com.pck4x.task_manager.modules.chat.infrastructure.entities.ChannelEntity;
+import com.pck4x.task_manager.modules.chat.infrastructure.mapper.ChannelMapper;
+import com.pck4x.task_manager.modules.chat.infrastructure.persistence.jpa.JpaChannelRepository;
+import com.pck4x.task_manager.modules.chat.interfaces.repositories.IChannelRepository;
 import com.pck4x.task_manager.modules.chat.objects.dtos.query.WorkspaceChannelDto;
 import com.pck4x.task_manager.shared.interfaces.QueryResult;
 import lombok.RequiredArgsConstructor;
@@ -17,21 +17,21 @@ import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
-public class ChatChannelRepository implements IChatChannelRepository {
-    private final JpaChatChannelRepository jpa;
-    private final ChatChannelMapper chatChannelMapper;
+public class ChannelRepository implements IChannelRepository {
+    private final JpaChannelRepository jpa;
+    private final ChannelMapper channelMapper;
 
     @Override
-    public TChatChannel save(TChatChannel chatChannel) {
-        ChatChannelEntity channel = chatChannelMapper.toEntity(chatChannel);
-        ChatChannelEntity saved = jpa.save(channel);
-        return chatChannelMapper.toDomain(saved);
+    public TChannel save(TChannel chatChannel) {
+        ChannelEntity channel = channelMapper.toEntity(chatChannel);
+        ChannelEntity saved = jpa.save(channel);
+        return channelMapper.toDomain(saved);
 
     }
 
     @Override
-    public Optional<TChatChannel> findById(UUID id) {
-       return jpa.findById(id).map(chatChannelMapper::toDomain);
+    public Optional<TChannel> findById(UUID id) {
+       return jpa.findById(id).map(channelMapper::toDomain);
     }
 
     @Override
