@@ -6,6 +6,6 @@ import java.util.UUID;
 
 @Getter
 public class SendMessageDto {
-    public UUID chatChannelId;
+    public UUID channelId;
     public String message;
 }

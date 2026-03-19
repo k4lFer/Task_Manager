@@ -36,7 +36,7 @@ public class EditMessageCommandHandler implements EditMessageCommand {
 
         eventPublisher.publishEvent(new MessageEditedEvent(
                 message.getId(),
-                message.getChatChannelId(),
+                message.getChannelId(),
                 message.getMessage(),
                 editorId,
                 message.getEditedAt()));

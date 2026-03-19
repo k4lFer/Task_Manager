@@ -13,6 +13,6 @@ public interface JpaChannelRepository extends JpaRepository<ChannelEntity, UUID>
 
     @Query("SELECT new com.pck4x.task_manager.modules.chat.objects.dtos.query.WorkspaceChannelDto(" +
             "c.id, c.name, c.description) " +
-            "FROM ChatChannelEntity c WHERE c.workspaceId = :workspaceId")
+            "FROM ChannelEntity c WHERE c.workspaceId = :workspaceId")
     Page<WorkspaceChannelDto> findByWorkspaceId(UUID workspaceId, Pageable pageable);
 }

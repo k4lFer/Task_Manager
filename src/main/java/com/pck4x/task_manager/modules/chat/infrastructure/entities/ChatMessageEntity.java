@@ -21,8 +21,8 @@ public class ChatMessageEntity {
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "chat_channel_id", nullable = false)
-    private ChannelEntity chatChannel;
+    @JoinColumn(name = "channel_id", nullable = false)
+    private ChannelEntity channels;
 
     @Column(name = "user_id", nullable = false)
     private UUID userId;

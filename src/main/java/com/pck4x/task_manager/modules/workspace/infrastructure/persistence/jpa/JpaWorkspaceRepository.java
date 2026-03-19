@@ -58,7 +58,7 @@ public interface JpaWorkspaceRepository extends JpaRepository<WorkspaceEntity, U
             c.name,
             c.description
         )
-        FROM ChatChannelEntity c
+        FROM ChannelEntity c
         WHERE c.workspaceId = :workspaceId
     """)
     List<WorkspaceChannelDto> findChannels(UUID workspaceId);

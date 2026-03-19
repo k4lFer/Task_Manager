@@ -15,17 +15,17 @@ import java.util.UUID;
 @NoArgsConstructor
 public class TChatMessage {
     private UUID id;
-    private UUID chatChannelId;
+    private UUID channelId;
     private UUID userId;
     private String message;
     private JsonNode content;
     private Instant sentAt;
     private Instant editedAt;
 
-    public static TChatMessage create(UUID chatChannelId, UUID userId, String message, JsonNode content) {
+    public static TChatMessage create(UUID channelId, UUID userId, String message, JsonNode content) {
         return TChatMessage.builder()
                 .id(UUID.randomUUID())
-                .chatChannelId(chatChannelId)
+                .channelId(channelId)
                 .userId(userId)
                 .message(message)
                 .content(content)

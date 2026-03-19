@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "chat_channels", schema = "chat")
+@Table(name = "channels", schema = "chat")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
@@ -31,6 +31,6 @@ public class ChannelEntity {
     @Column(name = "created_at", columnDefinition = "timestamptz")
     private Instant createdAt;
 
-    @OneToMany(mappedBy = "chatChannel", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "channels", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatMessageEntity> chatMessage = new ArrayList<>();
 }

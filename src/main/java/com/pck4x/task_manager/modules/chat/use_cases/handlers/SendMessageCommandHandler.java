@@ -23,7 +23,7 @@ public class SendMessageCommandHandler implements SendMessageCommand {
 
     @Override
     public OutputPort execute(UUID sendId, SendMessageDto input) {
-        var channel = chatChannelRepository.findById(input.getChatChannelId())
+        var channel = chatChannelRepository.findById(input.getChannelId())
                 .orElse(null);
 
         if (channel == null)
@@ -34,7 +34,7 @@ public class SendMessageCommandHandler implements SendMessageCommand {
             return OutputPort.failure(HttpStatus.FORBIDDEN, "You are not a member of this workspace");
 
         var chatMessage = TChatMessage.create(
-                input.getChatChannelId(),
+                input.getChannelId(),
                 sendId,
                 input.getMessage(),
                 null);

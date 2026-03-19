@@ -18,13 +18,13 @@ public abstract class ChatMessageMapper {
     protected EntityManager entityManager;
 
     @Mapping(
-            target = "chatChannel",
-            source = "chatChannelId",
+            target = "channels",
+            source = "channelId",
             qualifiedByName = "mapChannelRef"
     )
     public abstract ChatMessageEntity toEntity(TChatMessage domain);
 
-    @Mapping(target = "chatChannelId", source = "chatChannel.id")
+    @Mapping(target = "channelId", source = "channels.id")
     public abstract TChatMessage toDomain(ChatMessageEntity entity);
 
     @Named("mapChannelRef")

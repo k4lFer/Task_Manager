@@ -42,7 +42,7 @@ public class ChatMessageRepository implements IChatMessageRepository {
 
         Pageable pageRequest = PageRequest.of(pageIndex, pageable.getPageSize());
 
-        var result = jpa.findByChatChannelId(channelId, pageRequest);
+        var result = jpa.findBychannelId(channelId, pageRequest);
 
         return QueryResult.success(
                 result.getContent(),

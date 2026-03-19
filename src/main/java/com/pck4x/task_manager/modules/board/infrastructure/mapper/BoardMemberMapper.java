@@ -22,7 +22,7 @@ public abstract class BoardMemberMapper {
     @Mapping(target = "board", expression = "java(mapBoard(domain.getBoardId()))")
     public abstract BoardMemberEntity toEntity(TBoardMembers domain);
 
-    protected BoardEntity mapWorkspace(UUID boardId) {
+    protected BoardEntity mapBoard(UUID boardId) {
         return entityManager.getReference(BoardEntity.class, boardId);
     }
 }

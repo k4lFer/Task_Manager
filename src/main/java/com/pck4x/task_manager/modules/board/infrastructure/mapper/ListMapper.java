@@ -10,7 +10,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public abstract class ListMapper {
 
-    @Mapping(target = "board", ignore = true)
+    @Mapping(target = "boardId", source = "board.id")
     public abstract TList toDomain(ListEntity entity);
 
     @Mapping(target = "board", ignore = true)
@@ -19,5 +19,4 @@ public abstract class ListMapper {
     public abstract List<TList> toDomainList(List<ListEntity> entities);
 
     public abstract List<ListEntity> toEntityList(List<TList> domains);
-
 }
