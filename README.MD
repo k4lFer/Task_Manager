@@ -75,7 +75,6 @@ Esto permite que NexBoard evolucione hacia un ecosistema enterprise sin perder c
 - [x] **Auth Module** (Spring Security + JWT)
 - [x] **Boards Module** (dominio + CQRS + controladores + persistencia)
 - [x] **Workspaces Module** (dominio + CQRS + controladores + persistencia)
-- [x] **Sistema de permisos y roles por workspace**
 - [x] **Chat Module** (CQRS + WebSockets + persistencia + endpoints)
 
 ### 🚧 Módulos Pendientes / Próximos
@@ -85,6 +84,7 @@ Esto permite que NexBoard evolucione hacia un ecosistema enterprise sin perder c
 - [ ] **Notifications Module** (eventos en tiempo real + colas diferidas)
 - [ ] **Comments / Mentions** (interacción avanzada dentro de tarjetas)
 - [ ] **Deadlines & Scheduling** (fechas de vencimiento + recordatorios)
+- [ ] **Sistema de permisos y roles por workspace**
 - [ ] **Auditoría de eventos del sistema**
 
 ---
