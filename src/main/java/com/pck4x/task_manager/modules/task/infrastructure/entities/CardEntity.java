@@ -20,7 +20,7 @@ public class CardEntity {
     @Id
     private UUID id;
 
-    @Column(name = "lists_id", nullable = true)
+    @Column(name = "lists_id", nullable = false)
     private UUID listsId;
 
     @Column(name = "title")
@@ -44,10 +44,10 @@ public class CardEntity {
     @Column(name = "progress", precision = 5, scale = 2)
     private BigDecimal progress;
 
-    @Column(name = "created_at", columnDefinition = "timestamptz")
+    @Column(name = "created_at")
     private Instant createdAt;
 
-    @Column(name = "updated_at", columnDefinition = "timestamptz", nullable = true)
+    @Column(name = "updated_at", nullable = true)
     private Instant updatedAt;
 
 

@@ -1,6 +1,6 @@
-package com.pck4x.task_manager.modules.workspace.use_cases.validators;
+package com.pck4x.task_manager.modules.task.use_cases.validators;
 
-import com.pck4x.task_manager.modules.workspace.objects.dtos.command.CreateWorkspaceDto;
+import com.pck4x.task_manager.modules.task.objects.dtos.commands.CreateCardDto;
 import com.pck4x.task_manager.shared.interfaces.IInputPortValidator;
 import com.pck4x.task_manager.shared.objects.MessageDto;
 import lombok.RequiredArgsConstructor;
@@ -8,18 +8,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class CreateWorkspaceCommandValidator implements IInputPortValidator<CreateWorkspaceDto> {
-
+public class CreateCardCommandValidator implements IInputPortValidator<CreateCardDto> {
     private HttpStatusCode status;
-    private final List<MessageDto> message;
+    private List<MessageDto> message;
 
     @Override
-    public boolean Validate(CreateWorkspaceDto input) {
+    public boolean Validate(CreateCardDto input) {
         message.clear();
 
         if (input == null) {
@@ -28,11 +26,23 @@ public class CreateWorkspaceCommandValidator implements IInputPortValidator<Crea
             return false;
         }
 
-        if (input.getName() == null || input.getName().isBlank()) {
-            message.add(new MessageDto("NAME_REQUIRED", "Workspace name is required."));
+        if (input.getListId() == null) {
+            message.add(new MessageDto("LIST_ID_REQUIRED", "List ID is required."));
         }
 
-        if (!message.isEmpty()) {
+        if (input.getTitle() == null) {
+            message.add(new MessageDto("TITLE_REQUIRED", "Title is required."));
+        }
+
+        if (input.getStartDate() == null) {
+            message.add(new MessageDto("START_DATE_REQUIRED", "Start date is required."));
+        }
+
+        if (input.getDueDate() == null) {
+            message.add(new MessageDto("DUE_DATE_REQUIRED", "Due date is required."));
+        }
+
+        if (message.isEmpty()) {
             this.status = HttpStatus.UNPROCESSABLE_ENTITY;
             return false;
         }

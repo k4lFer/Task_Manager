@@ -25,7 +25,7 @@ public class CreateWorkspaceCommandHandler implements CreateWorkspaceCommand {
     public OutputPort<UUID> execute(UUID userId, CreateWorkspaceDto input) {
         if (!validator.Validate(input)) return OutputPort.failures(validator.getHttpStatusCode(), validator.getMessage());
 
-        var workspace = TWorkspace.create(
+       /* var workspace = TWorkspace.create(
                 userId,
                 input.getName(),
                 input.getDescription(),
@@ -35,10 +35,15 @@ public class CreateWorkspaceCommandHandler implements CreateWorkspaceCommand {
         var workspaceMember = TWorkspaceMembers.create(
                 workspace.getId(),
                 userId,
-                WorkspaceMemberRole.OWNER,
-                Instant.now()
+                WorkspaceMemberRole.OWNER
         );
-        workspace.attachWorkspace(workspaceMember);
+        workspace.attachWorkspace(workspaceMember);*/
+        var workspace = TWorkspace.create(
+                userId,
+                input.getName(),
+                input.getDescription(),
+                input.getIsPrivate()
+        );
 
         var saved = workspaceRepository.create(workspace);
         if (saved != null) return OutputPort.success(saved.getId(), HttpStatus.CREATED, "Workspace created successfully");

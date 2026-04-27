@@ -8,33 +8,20 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Getter
-@Builder
+@Builder(toBuilder = true)
 public class TWorkspaceMembers {
-    private UUID id;
-    private UUID workspaceId;
-    private UUID memberId;
-    private WorkspaceMemberRole role;
-    private Instant createdAt;
 
-    public static TWorkspaceMembers create(UUID workspaceId, UUID memberId, WorkspaceMemberRole role, Instant createdAt)
-    {
+    private final UUID id;
+    private final UUID memberId;
+    private final WorkspaceMemberRole role;
+    private final Instant createdAt;
+
+    public static TWorkspaceMembers create(UUID memberId, WorkspaceMemberRole role) {
         return TWorkspaceMembers.builder()
                 .id(UUID.randomUUID())
-                .workspaceId(workspaceId)
                 .memberId(memberId)
                 .role(role)
-                .createdAt(createdAt)
+                .createdAt(Instant.now())
                 .build();
-    }
-
-    void addMember(UUID memberId, WorkspaceMemberRole role){
-        this.memberId = memberId;
-        this.role = role;
-        this.createdAt = Instant.now();
-    }
-
-    void changeRole(UUID memberId, WorkspaceMemberRole role){
-        this.memberId = memberId;
-        this.role = role;
     }
 }

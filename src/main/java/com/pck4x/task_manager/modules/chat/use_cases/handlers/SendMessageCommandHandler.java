@@ -6,8 +6,10 @@ import com.pck4x.task_manager.modules.chat.interfaces.repositories.IChatMessageR
 import com.pck4x.task_manager.modules.chat.objects.dtos.command.SendMessageDto;
 import com.pck4x.task_manager.modules.chat.use_cases.command.SendMessageCommand;
 import com.pck4x.task_manager.modules.chat.use_cases.events.MessageSentEvent;
+import com.pck4x.task_manager.modules.workspace.interfaces.repositories.IWorkspaceMemberRepository;
 import com.pck4x.task_manager.shared.result.OutputPort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -18,8 +20,8 @@ import java.util.UUID;
 public class SendMessageCommandHandler implements SendMessageCommand {
     private final IChannelRepository chatChannelRepository;
     private final IChatMessageRepository chatMessageRepository;
-    private final com.pck4x.task_manager.modules.workspace.interfaces.repositories.IWorkspaceMemberRepository workspaceMemberRepository;
-    private final org.springframework.context.ApplicationEventPublisher eventPublisher;
+    private final IWorkspaceMemberRepository workspaceMemberRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     public OutputPort execute(UUID sendId, SendMessageDto input) {

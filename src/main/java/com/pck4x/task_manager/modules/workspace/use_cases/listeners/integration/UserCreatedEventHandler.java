@@ -26,15 +26,8 @@ public class UserCreatedEventHandler {
                 event.id(),
                 "Default Workspace",
                 "Workspace created automatically for new user",
-                true);
-
-        var workspaceMember = TWorkspaceMembers.create(
-                workspace.getId(),
-                event.id(),
-                WorkspaceMemberRole.OWNER,
-                event.createdAt()
+                true
         );
-        workspace.attachWorkspace(workspaceMember);
 
         workspaceRepository.create(workspace);
 

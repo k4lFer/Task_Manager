@@ -37,11 +37,13 @@ public class WorkspaceEntity {
     @Column(name = "updated_at", columnDefinition = "timestamptz")
     private Instant updatedAt;
 
+    @Builder.Default
     @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, orphanRemoval = true)
     @Fetch(FetchMode.SUBSELECT)
     private List<WorkspaceMemberEntity> workspaceMember = new ArrayList<>();
 
-    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
     @Fetch(FetchMode.SUBSELECT)
     private List<WorkspaceInvitationEntity> workspaceInvitation = new ArrayList<>();
 }

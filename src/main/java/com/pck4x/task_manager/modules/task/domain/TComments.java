@@ -15,4 +15,16 @@ public class TComments {
     private String content;
     private Instant createdAt;
     private Instant updatedAt;
+
+    public static TComments create(UUID cardsId, UUID userId, String content)
+    {
+        return TComments.builder()
+                .id(UUID.randomUUID())
+                .cardsId(cardsId)
+                .userId(userId)
+                .content(content)
+                .createdAt(Instant.now())
+                .updatedAt(null)
+                .build();
+    }
 }
