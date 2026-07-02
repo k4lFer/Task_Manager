@@ -7,6 +7,7 @@ import com.pck4x.task_manager.modules.board.interfaces.repositories.IBoardMember
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -32,5 +33,19 @@ public class BoardMemberRepository implements IBoardMemberRepository {
     public Optional<TBoardMembers> findByBoardIdAndMemberId(UUID boardId, UUID memberId) {
         return jpaBoardMemberRepository.findByBoardIdAndMemberId(boardId, memberId)
                 .map(boardMemberMapper::toDomain);
+    }
+
+    @Override
+    public List<TBoardMembers> findByBoardId(UUID boardId) {
+        return jpaBoardMemberRepository.findByBoardId(boardId).stream()
+                .map(boardMemberMapper::toDomain)
+                .toList();
+    }
+
+    @Override
+    public List<TBoardMembers> findByMemberId(UUID memberId) {
+        return jpaBoardMemberRepository.findByMemberId(memberId).stream()
+                .map(boardMemberMapper::toDomain)
+                .toList();
     }
 }

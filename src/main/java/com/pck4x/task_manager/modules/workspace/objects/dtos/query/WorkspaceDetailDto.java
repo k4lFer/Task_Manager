@@ -14,5 +14,6 @@ public record WorkspaceDetailDto(
         String ownerName,
         List<WorkspaceMemberDto> members,
         List<WorkspaceChannelDto> channels,
+        List<WorkspaceBoardDto> boards,
         Instant createdAt
 ) {}

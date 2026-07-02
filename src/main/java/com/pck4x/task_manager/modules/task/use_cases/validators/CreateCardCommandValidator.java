@@ -8,13 +8,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class CreateCardCommandValidator implements IInputPortValidator<CreateCardDto> {
     private HttpStatusCode status;
-    private List<MessageDto> message;
+    private final List<MessageDto> message = new ArrayList<>();
 
     @Override
     public boolean Validate(CreateCardDto input) {
@@ -30,19 +31,11 @@ public class CreateCardCommandValidator implements IInputPortValidator<CreateCar
             message.add(new MessageDto("LIST_ID_REQUIRED", "List ID is required."));
         }
 
-        if (input.getTitle() == null) {
+        if (input.getTitle() == null || input.getTitle().isBlank()) {
             message.add(new MessageDto("TITLE_REQUIRED", "Title is required."));
         }
 
-        if (input.getStartDate() == null) {
-            message.add(new MessageDto("START_DATE_REQUIRED", "Start date is required."));
-        }
-
-        if (input.getDueDate() == null) {
-            message.add(new MessageDto("DUE_DATE_REQUIRED", "Due date is required."));
-        }
-
-        if (message.isEmpty()) {
+        if (!message.isEmpty()) {
             this.status = HttpStatus.UNPROCESSABLE_ENTITY;
             return false;
         }

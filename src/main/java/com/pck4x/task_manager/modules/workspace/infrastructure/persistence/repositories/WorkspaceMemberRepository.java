@@ -32,6 +32,12 @@ public class WorkspaceMemberRepository implements IWorkspaceMemberRepository {
     }
 
     @Override
+    @Transactional
+    public void deleteByWorkspaceIdAndMemberId(UUID workspaceId, UUID memberId) {
+        jpaWorkspaceMemberRepository.deleteByWorkspaceIdAndMemberId(workspaceId, memberId);
+    }
+
+    @Override
     public Optional<TWorkspaceMembers> findByWorkspaceIdAndMemberId(UUID workspaceId, UUID memberId) {
         return jpaWorkspaceMemberRepository.findByWorkspaceIdAndMemberId(workspaceId, memberId)
                 .map(workspaceMemberMapper::toDomain);

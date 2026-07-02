@@ -3,6 +3,7 @@ package com.pck4x.task_manager.modules.chat.controllers;
 import com.pck4x.task_manager.modules.chat.objects.dtos.command.CreateChatChannelDto;
 import com.pck4x.task_manager.modules.chat.objects.dtos.command.SendMessageDto;
 import com.pck4x.task_manager.modules.chat.use_cases.command.CreateChannelCommand;
+import com.pck4x.task_manager.modules.chat.use_cases.command.DeleteChannelCommand;
 import com.pck4x.task_manager.modules.chat.use_cases.command.EditMessageCommand;
 import com.pck4x.task_manager.modules.chat.use_cases.command.SendMessageCommand;
 import com.pck4x.task_manager.shared.helper.ResponseHelper;
@@ -13,6 +14,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +30,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ChannelCommandController {
     private final CreateChannelCommand createChannelCommand;
+    private final DeleteChannelCommand deleteChannelCommand;
     private final SendMessageCommand sendMessageCommand;
     private final EditMessageCommand editMessageCommand;
 
@@ -36,6 +40,15 @@ public class ChannelCommandController {
             @Parameter(hidden = true) @AuthenticationPrincipal String userId,
             @RequestBody CreateChatChannelDto input) {
         var result = createChannelCommand.execute(UUID.fromString(userId), input);
+        return ResponseHelper.toResponse(result);
+    }
+
+    @DeleteMapping("/{channelId}")
+    @Operation(summary = "", description = "")
+    public ResponseEntity<?> Delete(
+            @Parameter(hidden = true) @AuthenticationPrincipal String userId,
+            @PathVariable UUID channelId) {
+        var result = deleteChannelCommand.execute(UUID.fromString(userId), channelId);
         return ResponseHelper.toResponse(result);
     }
 

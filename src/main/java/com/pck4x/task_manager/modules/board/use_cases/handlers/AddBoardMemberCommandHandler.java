@@ -3,7 +3,7 @@ package com.pck4x.task_manager.modules.board.use_cases.handlers;
 import com.pck4x.task_manager.modules.board.domain.models.TBoardMembers;
 import com.pck4x.task_manager.modules.board.interfaces.repositories.IBoardMemberRepository;
 import com.pck4x.task_manager.modules.board.interfaces.repositories.IBoardRepository;
-import com.pck4x.task_manager.modules.board.objects.enums.BoardMemberRole;
+import com.pck4x.task_manager.modules.board.objects.dtos.command.AddBoardMemberDto;
 import com.pck4x.task_manager.modules.board.use_cases.command.AddBoardMemberCommand;
 import com.pck4x.task_manager.modules.workspace.interfaces.services.IWorkspaceAccessService;
 import com.pck4x.task_manager.shared.result.OutputPort;
@@ -21,9 +21,15 @@ public class AddBoardMemberCommandHandler implements AddBoardMemberCommand {
     private final IWorkspaceAccessService workspaceAccessService;
 
     @Override
-    public OutputPort<UUID> execute(UUID workspaceId, UUID boardId, UUID ownerId, UUID userId, BoardMemberRole role) {
+    public OutputPort<UUID> execute(UUID ownerId, UUID boardId, AddBoardMemberDto input) {
+        var board = boardRepository.findById(boardId);
+        if (board.isEmpty()) {
+            return OutputPort.failure(HttpStatus.NOT_FOUND, "Board not found");
+        }
 
-        if (!workspaceAccessService.isExists(workspaceId, userId)) {
+        var workspaceId = board.get().getWorkspaceId();
+
+        if (!workspaceAccessService.isExists(workspaceId, input.getUserId())) {
             return OutputPort.failure(HttpStatus.FORBIDDEN, "User is not a member of this workspace");
         }
 
@@ -31,14 +37,14 @@ public class AddBoardMemberCommandHandler implements AddBoardMemberCommand {
             return OutputPort.failure(HttpStatus.FORBIDDEN, "Only Workspace Owner or Admins can add members");
         }
 
-        if (boardMemberRepository.findByBoardIdAndMemberId(boardId, userId).isPresent()) {
+        if (boardMemberRepository.findByBoardIdAndMemberId(boardId, input.getUserId()).isPresent()) {
             return OutputPort.failure(HttpStatus.FORBIDDEN, "User is already a member of this board");
         }
 
         var member = TBoardMembers.create(
                 boardId,
-                userId,
-                role
+                input.getUserId(),
+                input.getRole()
         );
 
         var saved = boardMemberRepository.save(member);

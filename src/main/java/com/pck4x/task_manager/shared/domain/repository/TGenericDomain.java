@@ -11,4 +11,8 @@ public abstract class TGenericDomain {
         domainEvents.clear();
         return events;
     }
+
+    public void addDomainEvent(Object event) {
+        domainEvents.add(event);
+    }
 }

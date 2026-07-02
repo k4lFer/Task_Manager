@@ -64,6 +64,7 @@ public class WorkspaceRepository implements IWorkspaceRepository {
                         base.ownerName(),
                         jpa.findMembers(workspaceId, userId),
                         jpa.findChannels(workspaceId),
+                        jpa.findBoards(workspaceId),
                         base.createdAt()
                 ));
     }

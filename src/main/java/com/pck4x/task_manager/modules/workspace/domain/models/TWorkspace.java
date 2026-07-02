@@ -55,4 +55,16 @@ public class TWorkspace {
         }
 
     }
+
+    public boolean removeMember(UUID memberId) {
+        var removed = members.stream()
+                .filter(m -> m.getMemberId().equals(memberId))
+                .findFirst();
+
+        if (removed.isEmpty()) return false;
+
+        members.remove(removed.get());
+        touch();
+        return true;
+    }
 }

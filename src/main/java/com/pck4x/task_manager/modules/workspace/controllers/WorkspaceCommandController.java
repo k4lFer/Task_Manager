@@ -26,6 +26,7 @@ public class WorkspaceCommandController {
     private final AcceptWorkspaceInvitationCommand acceptWorkspaceInvitationCommand;
     private final RejectWorkspaceInvitationCommand rejectWorkspaceInvitationCommand;
     private final CancelWorkspaceInvitationCommand cancelWorkspaceInvitationCommand;
+    private final RemoveMemberCommand removeMemberCommand;
 
     @PostMapping("/create")
     @Operation(
@@ -102,7 +103,8 @@ public class WorkspaceCommandController {
             @PathVariable UUID workspaceId,
             @PathVariable UUID memberId
     ) {
-        return ResponseEntity.ok().build();
+        var result = removeMemberCommand.execute(UUID.fromString(userId), workspaceId, memberId);
+        return ResponseHelper.toResponse(result);
     }
 
 }

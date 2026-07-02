@@ -1,7 +1,12 @@
 package com.pck4x.task_manager.modules.board.controllers;
 
+import com.pck4x.task_manager.modules.board.objects.dtos.command.AddBoardMemberDto;
 import com.pck4x.task_manager.modules.board.objects.dtos.command.CreateBoardDto;
+import com.pck4x.task_manager.modules.board.objects.dtos.command.UpdateBoardDto;
+import com.pck4x.task_manager.modules.board.use_cases.command.AddBoardMemberCommand;
 import com.pck4x.task_manager.modules.board.use_cases.command.CreateBoardCommand;
+import com.pck4x.task_manager.modules.board.use_cases.command.DeleteBoardCommand;
+import com.pck4x.task_manager.modules.board.use_cases.command.UpdateBoardCommand;
 import com.pck4x.task_manager.shared.helper.ResponseHelper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -21,6 +26,9 @@ import java.util.UUID;
 @AllArgsConstructor
 public class BoardCommandController {
     private final CreateBoardCommand createBoardCommand;
+    private final UpdateBoardCommand updateBoardCommand;
+    private final DeleteBoardCommand deleteBoardCommand;
+    private final AddBoardMemberCommand addBoardMemberCommand;
 
     @PostMapping("/workspace/{workspaceId}/create")
     @Operation(
@@ -33,6 +41,47 @@ public class BoardCommandController {
             @RequestBody CreateBoardDto input
     ){
         var result = createBoardCommand.execute(UUID.fromString(userId), workspaceId, input);
+        return ResponseHelper.toResponse(result);
+    }
+
+    @PatchMapping("/{boardId}")
+    @Operation(
+            summary = "",
+            description = ""
+    )
+    public ResponseEntity<?> Update(
+            @Parameter(hidden = true) @AuthenticationPrincipal String userId,
+            @PathVariable UUID boardId,
+            @RequestBody UpdateBoardDto input
+    ){
+        var result = updateBoardCommand.execute(UUID.fromString(userId), boardId, input);
+        return ResponseHelper.toResponse(result);
+    }
+
+    @DeleteMapping("/{boardId}")
+    @Operation(
+            summary = "",
+            description = ""
+    )
+    public ResponseEntity<?> Delete(
+            @Parameter(hidden = true) @AuthenticationPrincipal String userId,
+            @PathVariable UUID boardId
+    ){
+        var result = deleteBoardCommand.execute(UUID.fromString(userId), boardId);
+        return ResponseHelper.toResponse(result);
+    }
+
+    @PostMapping("/{boardId}/members")
+    @Operation(
+            summary = "",
+            description = ""
+    )
+    public ResponseEntity<?> AddMember(
+            @Parameter(hidden = true) @AuthenticationPrincipal String userId,
+            @PathVariable UUID boardId,
+            @RequestBody AddBoardMemberDto input
+    ){
+        var result = addBoardMemberCommand.execute(UUID.fromString(userId), boardId, input);
         return ResponseHelper.toResponse(result);
     }
 }

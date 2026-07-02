@@ -17,4 +17,9 @@ public class ChatPermissionService implements IChatPermissionService {
     public boolean canCreateChannel(UUID workspaceId, UUID memberId) {
         return workspaceAccessService.isAdminOrOwner(workspaceId, memberId);
     }
+
+    @Override
+    public boolean canDeleteChannel(UUID workspaceId, UUID memberId) {
+        return workspaceAccessService.isAdminOrOwner(workspaceId, memberId);
+    }
 }

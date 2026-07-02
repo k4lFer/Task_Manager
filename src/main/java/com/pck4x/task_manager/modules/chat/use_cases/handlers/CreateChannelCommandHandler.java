@@ -25,6 +25,10 @@ public class CreateChannelCommandHandler implements CreateChannelCommand {
             return OutputPort.failure(HttpStatus.FORBIDDEN, "Only Workspace Owner or Admins can create channels");
         }
 
+        if (chatChannelRepository.existsByNameAndWorkspaceId(input.getWorkspaceId(), input.getName())) {
+            return OutputPort.failure(HttpStatus.CONFLICT, "A channel with this name already exists in the workspace");
+        }
+
         var chatChannel = TChannel.create(
                 input.getWorkspaceId(),
                 input.getName(),

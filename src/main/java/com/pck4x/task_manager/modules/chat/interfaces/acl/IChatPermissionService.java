@@ -4,4 +4,5 @@ import java.util.UUID;
 
 public interface IChatPermissionService {
     boolean canCreateChannel(UUID workspaceId, UUID memberId);
+    boolean canDeleteChannel(UUID workspaceId, UUID memberId);
 }

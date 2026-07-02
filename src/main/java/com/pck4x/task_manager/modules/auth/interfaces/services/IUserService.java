@@ -6,10 +6,13 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface IUserService {
 
     Optional<UserInfoOutDto> getUserByExactEmail(String email);
+
+    Optional<UserInfoOutDto> getUserById(UUID id);
 
     QueryResult<List<UserInfoOutDto>> searchByEmailPrefix(
             String emailPrefix,

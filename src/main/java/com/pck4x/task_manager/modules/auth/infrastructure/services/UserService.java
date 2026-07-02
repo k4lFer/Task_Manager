@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -19,6 +20,17 @@ public class UserService implements IUserService {
     @Override
     public Optional<UserInfoOutDto> getUserByExactEmail(String email) {
         return userRepository.findInfoByExactEmail(email);
+    }
+
+    @Override
+    public Optional<UserInfoOutDto> getUserById(UUID id) {
+        return userRepository.findById(id)
+                .map(user -> new UserInfoOutDto(
+                        user.getId(),
+                        user.getEmail(),
+                        user.getPerson().getFirstName(),
+                        user.getPerson().getLastName()
+                ));
     }
 
     @Override

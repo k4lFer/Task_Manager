@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
@@ -21,5 +22,10 @@ public class ListRepository implements IListRepository {
         List<ListEntity> entities = mapper.toEntityList(lists);
 
         jpa.saveAll(entities);
+    }
+
+    @Override
+    public List<UUID> findIdsByBoardId(UUID boardId) {
+        return jpa.findIdsByBoardId(boardId);
     }
 }

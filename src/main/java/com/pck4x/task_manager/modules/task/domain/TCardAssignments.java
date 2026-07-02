@@ -10,7 +10,16 @@ import java.util.UUID;
 @Builder
 public class TCardAssignments {
     private UUID id;
-    private UUID userId;
     private UUID cardsId;
+    private UUID userId;
     private Instant assignedAt;
+
+    public static TCardAssignments create(UUID cardsId, UUID userId) {
+        return TCardAssignments.builder()
+                .id(UUID.randomUUID())
+                .cardsId(cardsId)
+                .userId(userId)
+                .assignedAt(Instant.now())
+                .build();
+    }
 }

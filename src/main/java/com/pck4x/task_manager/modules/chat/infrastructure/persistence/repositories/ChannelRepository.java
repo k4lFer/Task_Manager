@@ -50,4 +50,14 @@ public class ChannelRepository implements IChannelRepository {
     public boolean channelExits(UUID id) {
         return jpa.existsById(id);
     }
+
+    @Override
+    public void deleteById(UUID id) {
+        jpa.findById(id).ifPresent(jpa::delete);
+    }
+
+    @Override
+    public boolean existsByNameAndWorkspaceId(UUID workspaceId, String name) {
+        return jpa.existsByWorkspaceIdAndName(workspaceId, name);
+    }
 }

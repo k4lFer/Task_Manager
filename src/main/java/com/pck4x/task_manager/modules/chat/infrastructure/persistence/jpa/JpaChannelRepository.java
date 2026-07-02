@@ -15,4 +15,6 @@ public interface JpaChannelRepository extends JpaRepository<ChannelEntity, UUID>
             "c.id, c.name, c.description) " +
             "FROM ChannelEntity c WHERE c.workspaceId = :workspaceId")
     Page<WorkspaceChannelDto> findByWorkspaceId(UUID workspaceId, Pageable pageable);
+
+    boolean existsByWorkspaceIdAndName(UUID workspaceId, String name);
 }

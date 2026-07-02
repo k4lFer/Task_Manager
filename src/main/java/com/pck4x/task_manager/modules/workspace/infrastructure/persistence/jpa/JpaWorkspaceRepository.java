@@ -63,6 +63,27 @@ public interface JpaWorkspaceRepository extends JpaRepository<WorkspaceEntity, U
     """)
     List<WorkspaceChannelDto> findChannels(UUID workspaceId);
 
+
+    @Query("""
+        SELECT new com.pck4x.task_manager.modules.workspace.objects.dtos.query.WorkspaceBoardDto(
+            b.id,
+            b.name,
+            b.description,
+            b.ownerId,
+            CONCAT(p.firstName, ' ', p.lastName),
+            (SELECT COUNT(bm.id) FROM BoardMemberEntity bm WHERE bm.board.id = b.id),
+            (SELECT COUNT(l.id) FROM ListEntity l WHERE l.board.id = b.id),
+            (SELECT COUNT(c.id) FROM CardEntity c WHERE c.listsId IN (SELECT l2.id FROM ListEntity l2 WHERE l2.board.id = b.id)),
+            b.createdAt
+        )
+        FROM BoardEntity b
+        JOIN UserEntity u ON u.id = b.ownerId
+        JOIN u.person p
+        WHERE b.workspaceId = :workspaceId
+        ORDER BY b.createdAt DESC
+    """)
+    List<WorkspaceBoardDto> findBoards(UUID workspaceId);
+
     @Query(
         value = """
             SELECT new com.pck4x.task_manager.modules.workspace.objects.dtos.query.WorkspaceDto(

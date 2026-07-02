@@ -8,4 +8,5 @@ import java.util.UUID;
 
 public interface JpaWorkspaceMemberRepository extends JpaRepository<WorkspaceMemberEntity, UUID> {
     Optional<WorkspaceMemberEntity> findByWorkspaceIdAndMemberId(UUID workspaceId, UUID memberId);
+    void deleteByWorkspaceIdAndMemberId(UUID workspaceId, UUID memberId);
 }
