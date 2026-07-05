@@ -22,6 +22,7 @@ public class TBoardMembers {
                 .boardId(boardId)
                 .memberId(memberId)
                 .role(role)
+                .createdAt(Instant.now())
                 .build();
     }
 }

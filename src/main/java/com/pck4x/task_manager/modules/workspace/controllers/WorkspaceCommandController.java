@@ -6,6 +6,9 @@ import com.pck4x.task_manager.modules.workspace.use_cases.command.*;
 import com.pck4x.task_manager.shared.helper.ResponseHelper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -33,6 +36,7 @@ public class WorkspaceCommandController {
             summary = "Create a new workspace",
             description = "Creates a new workspace where the authenticated user becomes the owner. The workspace can be public or private based on the provided configuration."
     )
+    @ApiResponse(responseCode = "200", description = "Workspace created successfully", content = @Content(schema = @Schema(implementation = UUID.class)))
     public ResponseEntity<?> Create(
             @Parameter(hidden = true) @AuthenticationPrincipal String userId,
             @RequestBody CreateWorkspaceDto input
@@ -46,6 +50,7 @@ public class WorkspaceCommandController {
             summary = "Send workspace invitation",
             description = "Sends an invitation to a user to join a workspace. Only the workspace owner or administrators can send invitations. Only the owner can invite users with ADMIN role."
     )
+    @ApiResponse(responseCode = "200", description = "Invitation sent successfully", content = @Content(schema = @Schema(implementation = UUID.class)))
     public ResponseEntity<?> SendInvitation(
             @Parameter(hidden = true) @AuthenticationPrincipal String userId,
             @RequestBody SendWorkspaceInvitationDto input
@@ -59,6 +64,7 @@ public class WorkspaceCommandController {
             summary = "Accept workspace invitation",
             description = "Accepts a pending workspace invitation. The authenticated user becomes a member of the workspace with the role defined in the invitation."
     )
+    @ApiResponse(responseCode = "200", description = "Invitation accepted successfully")
     public ResponseEntity<?> AcceptInvitation(
             @Parameter(hidden = true) @AuthenticationPrincipal String userId,
             @PathVariable UUID invitationId
@@ -72,6 +78,7 @@ public class WorkspaceCommandController {
             summary = "Reject workspace invitation",
             description = "Rejects a pending workspace invitation. The invitation will be marked as rejected and cannot be used again."
     )
+    @ApiResponse(responseCode = "200", description = "Invitation rejected successfully")
     public ResponseEntity<?> RejectInvitation(
             @Parameter(hidden = true) @AuthenticationPrincipal String userId,
             @PathVariable UUID invitationId
@@ -85,6 +92,7 @@ public class WorkspaceCommandController {
             summary = "Cancel sent workspace invitation",
             description = "Cancels a workspace invitation that was previously sent. Only the workspace owner or administrators can cancel an invitation."
     )
+    @ApiResponse(responseCode = "200", description = "Invitation cancelled successfully")
     public ResponseEntity<?> CancelInvitation(
             @Parameter(hidden = true) @AuthenticationPrincipal String userId,
             @PathVariable UUID invitationId
@@ -98,6 +106,7 @@ public class WorkspaceCommandController {
             summary = "Remove workspace member",
             description = "Removes a member from the workspace. Only the workspace owner or administrators can remove members. Owners cannot be removed."
     )
+    @ApiResponse(responseCode = "200", description = "Member removed successfully")
     public ResponseEntity<?> RemoveMember(
             @Parameter(hidden = true) @AuthenticationPrincipal String userId,
             @PathVariable UUID workspaceId,

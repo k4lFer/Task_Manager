@@ -2,6 +2,7 @@ package com.pck4x.task_manager.modules.workspace.infrastructure.persistence.jpa;
 
 import com.pck4x.task_manager.modules.workspace.infrastructure.entities.WorkspaceEntity;
 import com.pck4x.task_manager.modules.workspace.objects.dtos.query.*;
+import com.pck4x.task_manager.modules.workspace.objects.dtos.query.Response.CheckWorkspaceInvitationResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -119,4 +120,39 @@ public interface JpaWorkspaceRepository extends JpaRepository<WorkspaceEntity, U
     """
     )
     Page<WorkspaceDto> findAllByOwnerOrMember(@Param("userId") UUID userId, Pageable pageable);
+
+    @Query(
+        value = """
+            SELECT new com.pck4x.task_manager.modules.workspace.objects.dtos.query.Response.CheckWorkspaceInvitationResponse(
+                CASE WHEN wm.id IS NULL AND wi.id IS NULL THEN true ELSE false END,
+                CASE WHEN wm.id IS NOT NULL THEN true ELSE false END,
+                CASE WHEN wi.id IS NOT NULL THEN true ELSE false END,
+                u.id,
+                u.email,
+                CONCAT(p.firstName, ' ', p.lastName),
+                CASE
+                    WHEN wm.id IS NOT NULL THEN 'Already a workspace member'
+                    WHEN wi.id IS NOT NULL THEN 'Pending invitation'
+                    ELSE 'User can be invited'
+                END
+            )
+            FROM UserEntity u
+            JOIN u.person p
+            LEFT JOIN WorkspaceMemberEntity wm ON wm.memberId = u.id AND wm.workspace.id = :workspaceId
+            LEFT JOIN WorkspaceInvitationEntity wi ON wi.workspace.id = :workspaceId AND (wi.invitedUserId = u.id OR wi.invitedEmail = u.email) AND wi.status = :pendingStatus
+            WHERE u.email LIKE CONCAT(:query, '%')
+            ORDER BY u.email ASC
+        """,
+        countQuery = """
+            SELECT COUNT(u.id)
+            FROM UserEntity u
+            WHERE u.email LIKE CONCAT(:query, '%')
+        """
+    )
+    Page<CheckWorkspaceInvitationResponse> findInvitableUsers(
+            @Param("workspaceId") UUID workspaceId,
+            @Param("query") String query,
+            @Param("pendingStatus") com.pck4x.task_manager.modules.workspace.objects.enums.WorkspaceInvitationStatus pendingStatus,
+            Pageable pageable
+    );
 }

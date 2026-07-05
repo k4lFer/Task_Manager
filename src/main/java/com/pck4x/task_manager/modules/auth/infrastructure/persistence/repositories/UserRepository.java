@@ -5,6 +5,7 @@ import com.pck4x.task_manager.modules.auth.infrastructure.entities.UserEntity;
 import com.pck4x.task_manager.modules.auth.infrastructure.mapper.UserMapper;
 import com.pck4x.task_manager.modules.auth.infrastructure.persistence.jpa.JpaUserRepository;
 import com.pck4x.task_manager.modules.auth.interfaces.repositories.IUserRepository;
+import com.pck4x.task_manager.modules.auth.objects.dtos.output.SignInUserDto;
 import com.pck4x.task_manager.modules.auth.objects.dtos.output.UserInfoOutDto;
 import com.pck4x.task_manager.modules.auth.objects.dtos.query.MyProfileDto;
 import com.pck4x.task_manager.shared.interfaces.QueryResult;
@@ -75,6 +76,11 @@ public class UserRepository implements IUserRepository {
     @Override
     public Optional<MyProfileDto> getMyProfile(UUID id) {
         return jpa.findById(id).map(mapper::toMyDto);
+    }
+
+    @Override
+    public Optional<SignInUserDto> findSignInUserByUsername(String username) {
+        return jpa.findSignInUserByUsername(username);
     }
 
     @Override

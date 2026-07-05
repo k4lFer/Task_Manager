@@ -1,6 +1,7 @@
 package com.pck4x.task_manager.modules.task.interfaces.repositories;
 
 import com.pck4x.task_manager.modules.task.domain.TCard;
+import com.pck4x.task_manager.modules.task.objects.dtos.query.CardDetailDto;
 import com.pck4x.task_manager.modules.task.objects.dtos.query.CardSummaryDto;
 
 import java.util.List;
@@ -15,4 +16,5 @@ public interface ICardRepository {
     Integer getNextPosition(UUID listId);
     List<CardSummaryDto> findCardSummariesByListId(UUID listId);
     void deleteByListsIdIn(List<UUID> listIds);
+    Optional<CardDetailDto> findCardDetailById(UUID id);
 }

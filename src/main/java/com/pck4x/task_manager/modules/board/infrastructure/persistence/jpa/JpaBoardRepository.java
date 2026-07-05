@@ -12,6 +12,12 @@ import java.util.UUID;
 public interface JpaBoardRepository extends JpaRepository<BoardEntity, UUID> {
     List<BoardEntity> findByWorkspaceId(UUID workspaceId);
 
+    @Query("SELECT CONCAT(p.firstName, ' ', p.lastName) FROM UserEntity u JOIN u.person p WHERE u.id = :userId")
+    String findOwnerNameByUserId(@Param("userId") UUID userId);
+
+    @Query("SELECT bm.memberId, CONCAT(p.firstName, ' ', p.lastName) FROM BoardMemberEntity bm JOIN UserEntity u ON u.id = bm.memberId JOIN u.person p WHERE bm.board.id = :boardId")
+    List<Object[]> findMemberNamesByBoardId(@Param("boardId") UUID boardId);
+
     @Query("""
         SELECT new com.pck4x.task_manager.modules.board.objects.dtos.query.BoardSummaryDto(
             b.id,

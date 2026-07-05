@@ -1,6 +1,7 @@
 package com.pck4x.task_manager.modules.auth.infrastructure.persistence.jpa;
 
 import com.pck4x.task_manager.modules.auth.infrastructure.entities.UserEntity;
+import com.pck4x.task_manager.modules.auth.objects.dtos.output.SignInUserDto;
 import com.pck4x.task_manager.modules.auth.objects.dtos.output.UserInfoOutDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +15,19 @@ import java.util.UUID;
 public interface JpaUserRepository extends JpaRepository<UserEntity, UUID> {
     Optional<UserEntity> findByEmail(String email);
     Optional<UserEntity> findByUsername(String username);
+
+    @Query("""
+        SELECT new com.pck4x.task_manager.modules.auth.objects.dtos.output.SignInUserDto(
+            u.id,
+            u.username,
+            u.person.firstName,
+            u.person.lastName,
+            u.password
+        )
+        FROM UserEntity u
+        WHERE u.username = :username
+    """)
+    Optional<SignInUserDto> findSignInUserByUsername(@Param("username") String username);
 
     @Query("""
         SELECT new com.pck4x.task_manager.modules.auth.objects.dtos.output.UserInfoOutDto(

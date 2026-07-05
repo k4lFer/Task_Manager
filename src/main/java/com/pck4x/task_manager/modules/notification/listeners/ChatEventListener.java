@@ -16,7 +16,7 @@ public class ChatEventListener {
     @EventListener
     public void handleMessageSent(MessageSentEvent event) {
         notificationService.notifyChannel(event.channelId(),
-                new ChatNotification(
+                new ChatNotification<>(
                         ChatNotification.NotificationType.CREATED,
                         event));
     }
@@ -24,7 +24,7 @@ public class ChatEventListener {
     @EventListener
     public void handleMessageEdited(MessageEditedEvent event) {
         notificationService.notifyChannel(event.channelId(),
-                new ChatNotification(
+                new ChatNotification<>(
                         ChatNotification.NotificationType.EDITED,
                         event));
     }

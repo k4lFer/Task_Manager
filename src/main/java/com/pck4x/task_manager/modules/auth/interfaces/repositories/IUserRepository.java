@@ -1,6 +1,7 @@
 package com.pck4x.task_manager.modules.auth.interfaces.repositories;
 
 import com.pck4x.task_manager.modules.auth.domain.models.TUser;
+import com.pck4x.task_manager.modules.auth.objects.dtos.output.SignInUserDto;
 import com.pck4x.task_manager.modules.auth.objects.dtos.output.UserInfoOutDto;
 import com.pck4x.task_manager.modules.auth.objects.dtos.query.MyProfileDto;
 import com.pck4x.task_manager.shared.interfaces.QueryResult;
@@ -18,5 +19,6 @@ public interface IUserRepository {
     QueryResult<List<UserInfoOutDto>> searchByEmailPrefix(String email, Pageable pageable);
     Optional<UserInfoOutDto> findInfoByExactEmail(String email);
     Optional<MyProfileDto> getMyProfile(UUID id);
+    Optional<SignInUserDto> findSignInUserByUsername(String username);
     java.util.List<TUser> findAllById(java.util.List<UUID> ids);
 }

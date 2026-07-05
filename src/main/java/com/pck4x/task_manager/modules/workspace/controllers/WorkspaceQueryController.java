@@ -1,10 +1,18 @@
 package com.pck4x.task_manager.modules.workspace.controllers;
 
+import com.pck4x.task_manager.modules.workspace.objects.dtos.query.Response.CheckWorkspaceInvitationResponse;
+import com.pck4x.task_manager.modules.workspace.objects.dtos.query.Response.GetReceivedInvitationsResponse;
+import com.pck4x.task_manager.modules.workspace.objects.dtos.query.Response.GetSentInvitationsResponse;
+import com.pck4x.task_manager.modules.workspace.objects.dtos.query.WorkspaceDetailDto;
+import com.pck4x.task_manager.modules.workspace.objects.dtos.query.WorkspaceDto;
 import com.pck4x.task_manager.modules.workspace.objects.enums.WorkspaceInvitationStatus;
 import com.pck4x.task_manager.modules.workspace.use_cases.query.*;
 import com.pck4x.task_manager.shared.helper.ResponseHelper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -33,6 +41,7 @@ public class WorkspaceQueryController {
             summary = "Get all user workspaces",
             description = "Returns a paginated list of all workspaces where the authenticated user is the owner or a member."
     )
+    @ApiResponse(responseCode = "200", description = "Paginated list of workspaces", content = @Content(schema = @Schema(implementation = WorkspaceDto.class)))
     public ResponseEntity<?> GetMyWorkspaces(
             @Parameter(hidden = true) @AuthenticationPrincipal String userId,
             @ParameterObject Pageable pageable
@@ -46,6 +55,7 @@ public class WorkspaceQueryController {
             summary = "Get workspace details",
             description = "Retrieves detailed information about a specific workspace. The authenticated user must be the owner or a member of the workspace."
     )
+    @ApiResponse(responseCode = "200", description = "Workspace details", content = @Content(schema = @Schema(implementation = WorkspaceDetailDto.class)))
     public ResponseEntity<?> GetById(
             @Parameter(hidden = true) @AuthenticationPrincipal String userId,
             @PathVariable UUID id
@@ -59,6 +69,7 @@ public class WorkspaceQueryController {
             summary = "Search users eligible for workspace invitation",
             description = "Searches for users that can be invited to the workspace. Excludes users who are already members or have pending invitations."
     )
+    @ApiResponse(responseCode = "200", description = "Paginated list of invitable users", content = @Content(schema = @Schema(implementation = CheckWorkspaceInvitationResponse.class)))
     public ResponseEntity<?> SearchInvitable(
             @PathVariable UUID id,
             @RequestParam String query,
@@ -73,6 +84,7 @@ public class WorkspaceQueryController {
             summary = "Get sent workspace invitations",
             description = "Returns a paginated list of workspace invitations sent by the authenticated user. Includes pending and expired invitations."
     )
+    @ApiResponse(responseCode = "200", description = "Paginated list of sent invitations", content = @Content(schema = @Schema(implementation = GetSentInvitationsResponse.class)))
     public ResponseEntity<?> InvitationsSent(
             @Parameter(hidden = true) @AuthenticationPrincipal String userId,
 
@@ -90,6 +102,7 @@ public class WorkspaceQueryController {
             summary = "Get received workspace invitations",
             description = "Returns a paginated list of workspace invitations received by the authenticated user. Invitations can be accepted or rejected."
     )
+    @ApiResponse(responseCode = "200", description = "Paginated list of received invitations", content = @Content(schema = @Schema(implementation = GetReceivedInvitationsResponse.class)))
     public ResponseEntity<?> InvitationsReceived(
             @Parameter(hidden = true) @AuthenticationPrincipal String userId,
 

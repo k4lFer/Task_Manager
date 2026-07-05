@@ -6,13 +6,19 @@ import com.pck4x.task_manager.modules.board.infrastructure.mapper.BoardMapper;
 import com.pck4x.task_manager.modules.board.infrastructure.persistence.jpa.JpaBoardRepository;
 import com.pck4x.task_manager.modules.board.interfaces.repositories.IBoardRepository;
 import com.pck4x.task_manager.modules.board.objects.dtos.query.BoardSummaryDto;
+import com.pck4x.task_manager.modules.board.objects.dtos.query.response.BoardLabelResponseDto;
+import com.pck4x.task_manager.modules.board.objects.dtos.query.response.BoardListResponseDto;
+import com.pck4x.task_manager.modules.board.objects.dtos.query.response.BoardMemberResponseDto;
+import com.pck4x.task_manager.modules.board.objects.dtos.query.response.GetBoardResponseDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -56,5 +62,49 @@ public class BoardRepository implements IBoardRepository {
     @Override
     public List<BoardSummaryDto> findBoardSummariesByUserId(UUID userId, UUID workspaceId) {
         return jpa.findBoardSummariesByMemberId(workspaceId, userId);
+    }
+
+    @Override
+    @Transactional
+    public Optional<GetBoardResponseDto> findBoardDetailById(UUID id, UUID userId) {
+        return jpa.findById(id).map(entity -> {
+            var ownerName = jpa.findOwnerNameByUserId(entity.getOwnerId());
+
+            var memberNames = jpa.findMemberNamesByBoardId(id).stream()
+                    .collect(Collectors.toMap(
+                            row -> (UUID) row[0],
+                            row -> (String) row[1]
+                    ));
+
+            var members = entity.getBoardMembers().stream()
+                    .map(m -> new BoardMemberResponseDto(
+                            m.getMemberId(),
+                            memberNames.getOrDefault(m.getMemberId(), "Unknown"),
+                            m.getRole(),
+                            m.getMemberId().equals(userId),
+                            m.getCreatedAt()
+                    ))
+                    .toList();
+
+            var lists = entity.getLists().stream()
+                    .map(l -> new BoardListResponseDto(l.getId(), l.getName(), l.getPosition()))
+                    .toList();
+
+            var labels = entity.getLabel().stream()
+                    .map(l -> new BoardLabelResponseDto(l.getId(), l.getName(), l.getColor()))
+                    .toList();
+
+            return new GetBoardResponseDto(
+                    entity.getId(),
+                    entity.getWorkspaceId(),
+                    entity.getOwnerId(),
+                    ownerName,
+                    entity.getName(),
+                    entity.getDescription(),
+                    members,
+                    lists,
+                    labels
+            );
+        });
     }
 }

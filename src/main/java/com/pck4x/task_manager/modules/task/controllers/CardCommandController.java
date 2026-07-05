@@ -5,6 +5,9 @@ import com.pck4x.task_manager.modules.task.use_cases.command.*;
 import com.pck4x.task_manager.shared.helper.ResponseHelper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -29,7 +32,8 @@ public class CardCommandController {
     private final RemoveLabelCommand removeLabelCommand;
 
     @PostMapping("/list/{listId}/create")
-    @Operation(summary = "", description = "")
+    @Operation(summary = "Create a card", description = "Creates a new card in the specified list.")
+    @ApiResponse(responseCode = "200", description = "Card created successfully", content = @Content(schema = @Schema(implementation = UUID.class)))
     public ResponseEntity<?> Create(
             @Parameter(hidden = true) @AuthenticationPrincipal String userId,
             @PathVariable UUID listId,
@@ -41,7 +45,8 @@ public class CardCommandController {
     }
 
     @PatchMapping("/{cardId}")
-    @Operation(summary = "", description = "")
+    @Operation(summary = "Update a card", description = "Updates the properties of an existing card.")
+    @ApiResponse(responseCode = "200", description = "Card updated successfully")
     public ResponseEntity<?> Update(
             @Parameter(hidden = true) @AuthenticationPrincipal String userId,
             @PathVariable UUID cardId,
@@ -52,7 +57,8 @@ public class CardCommandController {
     }
 
     @DeleteMapping("/{cardId}")
-    @Operation(summary = "", description = "")
+    @Operation(summary = "Delete a card", description = "Deletes a card and its associated data.")
+    @ApiResponse(responseCode = "200", description = "Card deleted successfully")
     public ResponseEntity<?> Delete(
             @Parameter(hidden = true) @AuthenticationPrincipal String userId,
             @PathVariable UUID cardId
@@ -62,7 +68,8 @@ public class CardCommandController {
     }
 
     @PostMapping("/{cardId}/assignments")
-    @Operation(summary = "", description = "")
+    @Operation(summary = "Assign a member to card", description = "Assigns a workspace member to a card.")
+    @ApiResponse(responseCode = "200", description = "Member assigned successfully", content = @Content(schema = @Schema(implementation = UUID.class)))
     public ResponseEntity<?> AddAssignment(
             @Parameter(hidden = true) @AuthenticationPrincipal String userId,
             @PathVariable UUID cardId,
@@ -73,7 +80,8 @@ public class CardCommandController {
     }
 
     @DeleteMapping("/{cardId}/assignments/{memberId}")
-    @Operation(summary = "", description = "")
+    @Operation(summary = "Remove member assignment", description = "Removes a member assignment from a card.")
+    @ApiResponse(responseCode = "200", description = "Assignment removed successfully")
     public ResponseEntity<?> RemoveAssignment(
             @Parameter(hidden = true) @AuthenticationPrincipal String userId,
             @PathVariable UUID cardId,
@@ -84,7 +92,8 @@ public class CardCommandController {
     }
 
     @PostMapping("/{cardId}/labels")
-    @Operation(summary = "", description = "")
+    @Operation(summary = "Add label to card", description = "Attaches a label to a card.")
+    @ApiResponse(responseCode = "200", description = "Label added successfully", content = @Content(schema = @Schema(implementation = UUID.class)))
     public ResponseEntity<?> AddLabel(
             @Parameter(hidden = true) @AuthenticationPrincipal String userId,
             @PathVariable UUID cardId,
@@ -95,7 +104,8 @@ public class CardCommandController {
     }
 
     @DeleteMapping("/{cardId}/labels/{labelId}")
-    @Operation(summary = "", description = "")
+    @Operation(summary = "Remove label from card", description = "Removes a label from a card.")
+    @ApiResponse(responseCode = "200", description = "Label removed successfully")
     public ResponseEntity<?> RemoveLabel(
             @Parameter(hidden = true) @AuthenticationPrincipal String userId,
             @PathVariable UUID cardId,

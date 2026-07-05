@@ -5,8 +5,10 @@ import com.pck4x.task_manager.modules.workspace.infrastructure.entities.Workspac
 import com.pck4x.task_manager.modules.workspace.infrastructure.mapper.WorkspaceMapper;
 import com.pck4x.task_manager.modules.workspace.infrastructure.persistence.jpa.JpaWorkspaceRepository;
 import com.pck4x.task_manager.modules.workspace.interfaces.repositories.IWorkspaceRepository;
+import com.pck4x.task_manager.modules.workspace.objects.dtos.query.Response.CheckWorkspaceInvitationResponse;
 import com.pck4x.task_manager.modules.workspace.objects.dtos.query.WorkspaceDetailDto;
 import com.pck4x.task_manager.modules.workspace.objects.dtos.query.WorkspaceDto;
+import com.pck4x.task_manager.modules.workspace.objects.enums.WorkspaceInvitationStatus;
 import com.pck4x.task_manager.shared.interfaces.QueryResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -87,4 +89,21 @@ public class WorkspaceRepository implements IWorkspaceRepository {
         );
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public QueryResult<List<CheckWorkspaceInvitationResponse>> findInvitableUsers(UUID workspaceId, String query, Pageable pageable) {
+        int pageIndex = Math.max(pageable.getPageNumber(), 0);
+        Pageable pageRequest = PageRequest.of(pageIndex, pageable.getPageSize());
+
+        Page<CheckWorkspaceInvitationResponse> result =
+                jpa.findInvitableUsers(workspaceId, query, WorkspaceInvitationStatus.PENDING, pageRequest);
+
+        return QueryResult.success(
+                result.getContent(),
+                (int) result.getTotalElements(),
+                result.getTotalPages(),
+                result.getNumber(),
+                result.getSize()
+        );
+    }
 }

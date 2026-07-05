@@ -10,6 +10,9 @@ import com.pck4x.task_manager.modules.board.use_cases.command.UpdateBoardCommand
 import com.pck4x.task_manager.shared.helper.ResponseHelper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -32,9 +35,10 @@ public class BoardCommandController {
 
     @PostMapping("/workspace/{workspaceId}/create")
     @Operation(
-            summary = "",
-            description = ""
+            summary = "Create a new board",
+            description = "Creates a new board within a workspace. The authenticated user becomes the owner."
     )
+    @ApiResponse(responseCode = "200", description = "Board created successfully", content = @Content(schema = @Schema(implementation = UUID.class)))
     public ResponseEntity<?> Create(
             @Parameter(hidden = true) @AuthenticationPrincipal String userId,
             @PathVariable UUID workspaceId,
@@ -46,9 +50,10 @@ public class BoardCommandController {
 
     @PatchMapping("/{boardId}")
     @Operation(
-            summary = "",
-            description = ""
+            summary = "Update a board",
+            description = "Updates the properties of an existing board."
     )
+    @ApiResponse(responseCode = "200", description = "Board updated successfully")
     public ResponseEntity<?> Update(
             @Parameter(hidden = true) @AuthenticationPrincipal String userId,
             @PathVariable UUID boardId,
@@ -60,9 +65,10 @@ public class BoardCommandController {
 
     @DeleteMapping("/{boardId}")
     @Operation(
-            summary = "",
-            description = ""
+            summary = "Delete a board",
+            description = "Deletes a board and all its contents."
     )
+    @ApiResponse(responseCode = "200", description = "Board deleted successfully")
     public ResponseEntity<?> Delete(
             @Parameter(hidden = true) @AuthenticationPrincipal String userId,
             @PathVariable UUID boardId
@@ -73,9 +79,10 @@ public class BoardCommandController {
 
     @PostMapping("/{boardId}/members")
     @Operation(
-            summary = "",
-            description = ""
+            summary = "Add board member",
+            description = "Adds a member to the board with a specified role."
     )
+    @ApiResponse(responseCode = "200", description = "Member added successfully", content = @Content(schema = @Schema(implementation = UUID.class)))
     public ResponseEntity<?> AddMember(
             @Parameter(hidden = true) @AuthenticationPrincipal String userId,
             @PathVariable UUID boardId,

@@ -20,7 +20,7 @@ public class SignInCommandHandler implements SignInCommand {
 
     @Override
     public OutputPort<SignInOutDto> execute(SignInDto input) {
-        var userOptional = userRepository.findByUsername(input.getUsername());
+        var userOptional = userRepository.findSignInUserByUsername(input.getUsername());
 
         if (userOptional.isEmpty()) {
             return OutputPort.failure(HttpStatus.BAD_REQUEST, "Invalid credentials");
@@ -28,18 +28,18 @@ public class SignInCommandHandler implements SignInCommand {
 
         var user = userOptional.get();
 
-        if (!passwordEncoder.matches(input.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(input.getPassword(), user.password())) {
             return OutputPort.failure(HttpStatus.BAD_REQUEST, "Invalid credentials");
         }
 
-        var accessToken = jwtService.generateAccessToken(user.getId());
-        var refreshToken = jwtService.generateRefreshToken(user.getId());
+        var accessToken = jwtService.generateAccessToken(user.id());
+        var refreshToken = jwtService.generateRefreshToken(user.id());
 
-        SignInOutDto output = new SignInOutDto(
-                user.getId(),
-                user.getUsername(),
-                user.getPerson().getFirstName(),
-                user.getPerson().getLastName(),
+        var output = new SignInOutDto(
+                user.id(),
+                user.username(),
+                user.firstName(),
+                user.lastName(),
                 accessToken,
                 refreshToken
         );

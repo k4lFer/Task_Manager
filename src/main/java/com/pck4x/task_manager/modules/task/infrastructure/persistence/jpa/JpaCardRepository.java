@@ -11,6 +11,11 @@ import java.util.List;
 import java.util.UUID;
 
 public interface JpaCardRepository extends JpaRepository<CardEntity, UUID> {
+    @Query("SELECT ca.userId, CONCAT(p.firstName, ' ', p.lastName) FROM CardAssignmentsEntity ca JOIN UserEntity u ON u.id = ca.userId JOIN u.person p WHERE ca.cards.id = :cardId")
+    List<Object[]> findMemberNamesByCardId(@Param("cardId") UUID cardId);
+
+    @Query("SELECT l.id, l.name, l.color FROM CardLabelsEntity cl JOIN LabelEntity l ON l.id = cl.labelsId WHERE cl.cards.id = :cardId")
+    List<Object[]> findLabelDetailsByCardId(@Param("cardId") UUID cardId);
     List<CardEntity> findByListsIdOrderByPositionAsc(UUID listsId);
 
     @Query("""

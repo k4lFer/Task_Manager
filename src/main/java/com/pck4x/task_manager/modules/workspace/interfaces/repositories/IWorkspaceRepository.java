@@ -1,6 +1,7 @@
 package com.pck4x.task_manager.modules.workspace.interfaces.repositories;
 
 import com.pck4x.task_manager.modules.workspace.domain.models.TWorkspace;
+import com.pck4x.task_manager.modules.workspace.objects.dtos.query.Response.CheckWorkspaceInvitationResponse;
 import com.pck4x.task_manager.modules.workspace.objects.dtos.query.WorkspaceDetailDto;
 import com.pck4x.task_manager.modules.workspace.objects.dtos.query.WorkspaceDto;
 import com.pck4x.task_manager.shared.interfaces.QueryResult;
@@ -16,4 +17,5 @@ public interface IWorkspaceRepository {
     Optional<TWorkspace> getWorkspace(UUID id);
     Optional<WorkspaceDetailDto> getWorkspaceByIdAndOwnerId(UUID workspaceId, UUID ownerId);
     QueryResult<List<WorkspaceDto>> getAllWorkspaceByOwnerId(UUID ownerId, Pageable pageable);
+    QueryResult<List<CheckWorkspaceInvitationResponse>> findInvitableUsers(UUID workspaceId, String query, Pageable pageable);
 }
