@@ -7,6 +7,7 @@ import java.util.UUID;
 
 @Externalized
 public record MessageSentEvent(
+        UUID id,
         UUID channelId,
         String message,
         UUID senderId,

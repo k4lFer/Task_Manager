@@ -52,4 +52,9 @@ public class ChatMessageRepository implements IChatMessageRepository {
                 result.getSize()
         );
     }
+
+    @Override
+    public String findSenderNameById(UUID userId) {
+        return jpa.findSenderNameById(userId);
+    }
 }

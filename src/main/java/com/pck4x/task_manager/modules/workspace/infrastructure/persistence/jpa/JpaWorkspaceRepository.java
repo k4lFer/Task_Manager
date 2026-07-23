@@ -141,12 +141,15 @@ public interface JpaWorkspaceRepository extends JpaRepository<WorkspaceEntity, U
             LEFT JOIN WorkspaceMemberEntity wm ON wm.memberId = u.id AND wm.workspace.id = :workspaceId
             LEFT JOIN WorkspaceInvitationEntity wi ON wi.workspace.id = :workspaceId AND (wi.invitedUserId = u.id OR wi.invitedEmail = u.email) AND wi.status = :pendingStatus
             WHERE u.email LIKE CONCAT(:query, '%')
+               OR CONCAT(p.firstName, ' ', p.lastName) LIKE CONCAT(:query, '%')
             ORDER BY u.email ASC
         """,
         countQuery = """
             SELECT COUNT(u.id)
             FROM UserEntity u
+            JOIN u.person p
             WHERE u.email LIKE CONCAT(:query, '%')
+               OR CONCAT(p.firstName, ' ', p.lastName) LIKE CONCAT(:query, '%')
         """
     )
     Page<CheckWorkspaceInvitationResponse> findInvitableUsers(

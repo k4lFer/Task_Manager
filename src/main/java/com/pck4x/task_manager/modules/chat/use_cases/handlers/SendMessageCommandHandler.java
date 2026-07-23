@@ -44,6 +44,7 @@ public class SendMessageCommandHandler implements SendMessageCommand {
         chatMessageRepository.save(chatMessage);
 
         eventPublisher.publishEvent(new MessageSentEvent(
+                chatMessage.getId(),
                 channel.getId(),
                 input.getMessage(),
                 sendId,

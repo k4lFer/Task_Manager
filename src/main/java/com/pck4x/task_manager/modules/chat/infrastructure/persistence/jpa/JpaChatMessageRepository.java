@@ -29,4 +29,12 @@ public interface JpaChatMessageRepository extends JpaRepository<ChatMessageEntit
     """)
     Page<ChatMessageResponseDto> findBychannelId(UUID channelId, Pageable pageable);
 
+    @Query("""
+        SELECT CONCAT(p.firstName, ' ', p.lastName)
+        FROM UserEntity u
+        JOIN u.person p
+        WHERE u.id = :userId
+    """)
+    String findSenderNameById(UUID userId);
+
 }

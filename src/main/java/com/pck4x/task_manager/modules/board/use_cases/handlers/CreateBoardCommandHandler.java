@@ -6,6 +6,7 @@ import com.pck4x.task_manager.modules.board.interfaces.repositories.IBoardReposi
 import com.pck4x.task_manager.modules.board.objects.dtos.command.CreateBoardDto;
 import com.pck4x.task_manager.modules.board.objects.enums.BoardMemberRole;
 import com.pck4x.task_manager.modules.board.use_cases.command.CreateBoardCommand;
+import com.pck4x.task_manager.modules.workspace.interfaces.services.IWorkspaceAccessService;
 import com.pck4x.task_manager.shared.application.adapter.DomainEventPublisher;
 import com.pck4x.task_manager.shared.result.OutputPort;
 import lombok.AllArgsConstructor;
@@ -18,10 +19,15 @@ import java.util.UUID;
 @AllArgsConstructor
 public class CreateBoardCommandHandler implements CreateBoardCommand {
     private final IBoardRepository boardRepository;
+    private final IWorkspaceAccessService workspaceAccessService;
     private final DomainEventPublisher domainEventPublisher;
 
     @Override
     public OutputPort<UUID> execute(UUID userId, UUID workspaceId, CreateBoardDto input) {
+
+        if (!workspaceAccessService.isAdminOrOwner(workspaceId, userId)) {
+            return OutputPort.failure(HttpStatus.FORBIDDEN, "Only workspace owner or admins can create boards");
+        }
 
         var board = TBoard.create(
                 workspaceId,

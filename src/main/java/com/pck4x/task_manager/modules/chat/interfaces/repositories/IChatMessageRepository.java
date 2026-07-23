@@ -18,4 +18,6 @@ public interface IChatMessageRepository {
     //Page<TChatMessage> findByChannelId(UUID channelId, Pageable pageable);
 
     QueryResult<List<ChatMessageResponseDto>> findChatsByChannelId(UUID channelId, Pageable pageable);
+
+    String findSenderNameById(UUID userId);
 }
