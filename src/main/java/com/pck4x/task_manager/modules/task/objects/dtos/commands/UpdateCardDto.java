@@ -4,6 +4,7 @@ import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.UUID;
 
 @Getter
 public class UpdateCardDto {
@@ -12,4 +13,5 @@ public class UpdateCardDto {
     public Instant startDate;
     public Instant dueDate;
     public BigDecimal progress;
+    public UUID listId;
 }

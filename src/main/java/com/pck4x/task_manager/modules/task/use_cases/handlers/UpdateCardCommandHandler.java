@@ -25,7 +25,7 @@ public class UpdateCardCommandHandler implements UpdateCardCommand {
         }
 
         var cardData = card.get();
-        cardData.update(input.title, input.description, input.startDate, input.dueDate, input.progress);
+        cardData.update(input.title, input.description, input.startDate, input.dueDate, input.progress, input.listId);
 
         var saved = cardRepository.save(cardData);
         if (saved == null) {

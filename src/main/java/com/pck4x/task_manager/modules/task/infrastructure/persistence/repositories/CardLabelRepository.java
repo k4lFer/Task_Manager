@@ -3,6 +3,7 @@ package com.pck4x.task_manager.modules.task.infrastructure.persistence.repositor
 import com.pck4x.task_manager.modules.task.domain.TCardLabels;
 import com.pck4x.task_manager.modules.task.infrastructure.mapper.CardLabelMapper;
 import com.pck4x.task_manager.modules.task.infrastructure.persistence.jpa.JpaCardLabelsRepository;
+import com.pck4x.task_manager.modules.task.infrastructure.persistence.jpa.JpaCardRepository;
 import com.pck4x.task_manager.modules.task.interfaces.repositories.ICardLabelRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +17,18 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CardLabelRepository implements ICardLabelRepository {
     private final JpaCardLabelsRepository jpa;
+    private final JpaCardRepository jpaCardRepository;
     private final CardLabelMapper mapper;
 
     @Override
     @Transactional
     public TCardLabels save(TCardLabels cardLabel) {
         var entity = mapper.toEntity(cardLabel);
+
+        var cardEntity = jpaCardRepository.findById(cardLabel.getCardsId())
+                .orElseThrow(() -> new IllegalArgumentException("Card not found: " + cardLabel.getCardsId()));
+        entity.setCards(cardEntity);
+
         var saved = jpa.save(entity);
         return mapper.toDomain(saved);
     }

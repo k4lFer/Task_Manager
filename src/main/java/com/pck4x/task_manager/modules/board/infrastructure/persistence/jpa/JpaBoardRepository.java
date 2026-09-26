@@ -18,6 +18,22 @@ public interface JpaBoardRepository extends JpaRepository<BoardEntity, UUID> {
     @Query("SELECT bm.memberId, CONCAT(p.firstName, ' ', p.lastName) FROM BoardMemberEntity bm JOIN UserEntity u ON u.id = bm.memberId JOIN u.person p WHERE bm.board.id = :boardId")
     List<Object[]> findMemberNamesByBoardId(@Param("boardId") UUID boardId);
 
+    @Query(value = """
+        SELECT wm.member_id,
+               CONCAT(p.first_name, ' ', p.last_name) AS full_name,
+               wm.role AS workspace_role,
+               CASE WHEN bm.id IS NOT NULL THEN true ELSE false END AS is_board_member
+        FROM workspace.workspace_members wm
+        JOIN auth.users u ON u.id = wm.member_id
+        JOIN auth.persons p ON p.id = u.person_id
+        LEFT JOIN board.board_members bm ON bm.member_id = wm.member_id AND bm.board_id = :boardId
+        WHERE wm.workspace_id = :workspaceId
+        """, nativeQuery = true)
+    List<Object[]> findWorkspaceMembersWithBoardStatus(
+            @Param("workspaceId") UUID workspaceId,
+            @Param("boardId") UUID boardId
+        );
+
     @Query("""
         SELECT new com.pck4x.task_manager.modules.board.objects.dtos.query.BoardSummaryDto(
             b.id,

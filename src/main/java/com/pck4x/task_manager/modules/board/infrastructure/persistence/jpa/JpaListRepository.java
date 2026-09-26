@@ -12,4 +12,6 @@ public interface JpaListRepository extends JpaRepository<ListEntity, UUID> {
 
     @Query("SELECT l.id FROM ListEntity l WHERE l.board.id = :boardId")
     List<UUID> findIdsByBoardId(@Param("boardId") UUID boardId);
+
+    long countByBoardId(@Param("boardId") UUID boardId);
 }

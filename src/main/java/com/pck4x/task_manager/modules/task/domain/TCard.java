@@ -44,12 +44,13 @@ public class TCard extends TGenericDomain {
         return card;
     }
 
-    public void update(String title, String description, Instant startDate, Instant dueDate, BigDecimal progress) {
+    public void update(String title, String description, Instant startDate, Instant dueDate, BigDecimal progress, UUID listId) {
         if (title != null) this.title = title;
         if (description != null) this.description = description;
         if (startDate != null) this.startDate = startDate;
         if (dueDate != null) this.dueDate = dueDate;
         if (progress != null) this.progress = progress;
+        if (listId != null) this.listsId = listId;
         this.updatedAt = Instant.now();
         domainEvents.add(new CardUpdatedEvent(this.id));
     }

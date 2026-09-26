@@ -27,7 +27,6 @@ public class BoardRepository implements IBoardRepository {
     private final BoardMapper mapper;
 
     @Override
-    @Transactional
     public TBoard save(TBoard board) {
         BoardEntity entity = mapper.toEntity(board);
 

@@ -2,6 +2,8 @@ package com.pck4x.task_manager.modules.task.controllers;
 
 import com.pck4x.task_manager.modules.task.objects.dtos.query.CardDetailDto;
 import com.pck4x.task_manager.modules.task.objects.dtos.query.CardSummaryDto;
+import com.pck4x.task_manager.modules.task.objects.dtos.query.response.AssignableMemberDto;
+import com.pck4x.task_manager.modules.task.use_cases.query.GetAssignableMembersQuery;
 import com.pck4x.task_manager.modules.task.use_cases.query.GetCardByIdQuery;
 import com.pck4x.task_manager.modules.task.use_cases.query.GetCardsByListQuery;
 import com.pck4x.task_manager.shared.helper.ResponseHelper;
@@ -27,6 +29,7 @@ import java.util.UUID;
 public class CardQueryController {
     private final GetCardsByListQuery getCardsByListQuery;
     private final GetCardByIdQuery getCardByIdQuery;
+    private final GetAssignableMembersQuery getAssignableMembersQuery;
 
     @GetMapping("/list/{listId}/cards")
     @Operation(summary = "Get cards by list", description = "Retrieves all cards in a specific list/column.")
@@ -47,6 +50,20 @@ public class CardQueryController {
             @PathVariable UUID cardId
     ) {
         var result = getCardByIdQuery.execute(cardId, UUID.fromString(userId));
+        return ResponseHelper.toResponse(result);
+    }
+
+    @GetMapping("/{cardId}/assignable-members")
+    @Operation(
+            summary = "Get assignable members",
+            description = "Retrieves workspace members that can be assigned to a card, with assignment status and role info."
+    )
+    @ApiResponse(responseCode = "200", description = "Assignable members", content = @Content(schema = @Schema(implementation = AssignableMemberDto.class)))
+    public ResponseEntity<?> GetAssignableMembers(
+            @Parameter(hidden = true) @AuthenticationPrincipal String userId,
+            @PathVariable UUID cardId
+    ) {
+        var result = getAssignableMembersQuery.execute(cardId, UUID.fromString(userId));
         return ResponseHelper.toResponse(result);
     }
 }

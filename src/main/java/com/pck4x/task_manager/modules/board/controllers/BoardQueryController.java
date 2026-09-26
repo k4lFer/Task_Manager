@@ -1,7 +1,9 @@
 package com.pck4x.task_manager.modules.board.controllers;
 
+import com.pck4x.task_manager.modules.board.objects.dtos.query.response.BoardAssignableMemberDto;
 import com.pck4x.task_manager.modules.board.objects.dtos.query.response.GetBoardResponseDto;
 import com.pck4x.task_manager.modules.board.objects.dtos.query.response.GetBoardsResponseDto;
+import com.pck4x.task_manager.modules.board.use_cases.query.GetBoardAssignableMembersQuery;
 import com.pck4x.task_manager.modules.board.use_cases.query.GetBoardByIdQuery;
 import com.pck4x.task_manager.modules.board.use_cases.query.GetBoardsByWorkspaceId;
 import com.pck4x.task_manager.shared.helper.ResponseHelper;
@@ -30,6 +32,7 @@ import java.util.UUID;
 public class BoardQueryController {
     private final GetBoardsByWorkspaceId getBoardsByWorkspaceId;
     private final GetBoardByIdQuery getBoardByIdQuery;
+    private final GetBoardAssignableMembersQuery getBoardAssignableMembersQuery;
 
     @GetMapping("/workspace/{workspaceId}/boards")
     @Operation(
@@ -56,6 +59,20 @@ public class BoardQueryController {
             @PathVariable UUID boardId
     ) {
         var result = getBoardByIdQuery.execute(boardId, UUID.fromString(userId));
+        return ResponseHelper.toResponse(result);
+    }
+
+    @GetMapping("/{boardId}/assignable-members")
+    @Operation(
+            summary = "Get assignable board members",
+            description = "Retrieves workspace members that can be added to the board, with board membership status."
+    )
+    @ApiResponse(responseCode = "200", description = "Assignable members", content = @Content(schema = @Schema(implementation = BoardAssignableMemberDto.class)))
+    public ResponseEntity<?> GetAssignableMembers(
+            @Parameter(hidden = true) @AuthenticationPrincipal String userId,
+            @PathVariable UUID boardId
+    ) {
+        var result = getBoardAssignableMembersQuery.execute(boardId, UUID.fromString(userId));
         return ResponseHelper.toResponse(result);
     }
 }

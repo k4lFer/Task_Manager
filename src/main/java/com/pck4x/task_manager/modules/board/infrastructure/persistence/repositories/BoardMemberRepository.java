@@ -26,7 +26,7 @@ public class BoardMemberRepository implements IBoardMemberRepository {
 
     @Override
     public void deleteMember(UUID memberId) {
-
+        jpaBoardMemberRepository.deleteById(memberId);
     }
 
     @Override

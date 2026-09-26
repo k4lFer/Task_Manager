@@ -3,6 +3,7 @@ package com.pck4x.task_manager.modules.task.infrastructure.persistence.repositor
 import com.pck4x.task_manager.modules.task.domain.TCardAssignments;
 import com.pck4x.task_manager.modules.task.infrastructure.mapper.CardAssignmentMapper;
 import com.pck4x.task_manager.modules.task.infrastructure.persistence.jpa.JpaCardAssignmentsRepository;
+import com.pck4x.task_manager.modules.task.infrastructure.persistence.jpa.JpaCardRepository;
 import com.pck4x.task_manager.modules.task.interfaces.repositories.ICardAssignmentRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +17,18 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CardAssignmentRepository implements ICardAssignmentRepository {
     private final JpaCardAssignmentsRepository jpa;
+    private final JpaCardRepository jpaCardRepository;
     private final CardAssignmentMapper mapper;
 
     @Override
     @Transactional
     public TCardAssignments save(TCardAssignments assignment) {
         var entity = mapper.toEntity(assignment);
+
+        var cardEntity = jpaCardRepository.findById(assignment.getCardsId())
+                .orElseThrow(() -> new IllegalArgumentException("Card not found: " + assignment.getCardsId()));
+        entity.setCards(cardEntity);
+
         var saved = jpa.save(entity);
         return mapper.toDomain(saved);
     }

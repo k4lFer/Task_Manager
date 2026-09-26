@@ -50,4 +50,31 @@ public interface JpaCardRepository extends JpaRepository<CardEntity, UUID> {
     @Modifying
     @Query("DELETE FROM CardEntity c WHERE c.listsId IN :listIds")
     void deleteByListsIdIn(@Param("listIds") List<UUID> listIds);
+
+    @Query(value = """
+        SELECT b.id, b.workspace_id, b.owner_id
+        FROM task.cards c
+        JOIN board.lists l ON l.id = c.lists_id
+        JOIN board.boards b ON b.id = l.board_id
+        WHERE c.id = :cardId
+        """, nativeQuery = true)
+    List<Object[]> findBoardInfoByCardId(@Param("cardId") UUID cardId);
+
+    @Query(value = """
+        SELECT bm.member_id,
+               CONCAT(p.first_name, ' ', p.last_name) AS full_name,
+               bm.role AS board_role
+        FROM board.board_members bm
+        JOIN auth.users u ON u.id = bm.member_id
+        JOIN auth.persons p ON p.id = u.person_id
+        WHERE bm.board_id = :boardId
+        """, nativeQuery = true)
+    List<Object[]> findBoardMembersWithNames(@Param("boardId") UUID boardId);
+
+    @Query(value = """
+        SELECT ca.user_id
+        FROM task.card_assignments ca
+        WHERE ca.cards_id = :cardId
+        """, nativeQuery = true)
+    List<Object[]> findAssignedUserRows(@Param("cardId") UUID cardId);
 }

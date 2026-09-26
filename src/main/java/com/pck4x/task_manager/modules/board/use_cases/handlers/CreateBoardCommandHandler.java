@@ -12,11 +12,13 @@ import com.pck4x.task_manager.shared.result.OutputPort;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
 @Component
 @AllArgsConstructor
+@Transactional
 public class CreateBoardCommandHandler implements CreateBoardCommand {
     private final IBoardRepository boardRepository;
     private final IWorkspaceAccessService workspaceAccessService;
