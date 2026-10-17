@@ -20,12 +20,13 @@ public class TaskManagerApplication {
     @Primary
     public TaskExecutor taskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(4);
-        executor.setMaxPoolSize(8);
+        executor.setCorePoolSize(10);
+        executor.setMaxPoolSize(50);
         executor.setQueueCapacity(100);
-        executor.setThreadNamePrefix("async-");
+        executor.setThreadNamePrefix("TaskExecutor-");
+        executor.setAwaitTerminationSeconds(60);
+        executor.setWaitForTasksToCompleteOnShutdown(true);
         executor.initialize();
         return executor;
     }
-
 }
